@@ -9,8 +9,8 @@ import {
 
 export default new Command({
 	data: {
-		name: "command",
-		description: "This is a test command",
+		name: "start",
+		description: "Begin a Wildly Deadly Cards match",
 		integration_types: [
 			ApplicationIntegrationType.GuildInstall,
 			ApplicationIntegrationType.UserInstall,

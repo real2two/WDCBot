@@ -1,5 +1,6 @@
 import env from "../utils/env";
 import commands from "../utils/commands";
+import components from "../utils/components";
 import { Hono } from "hono";
 import { handleHonoRequest } from "@httpi/adapter-hono";
 import { createEvents } from "@httpi/client";
@@ -16,6 +17,7 @@ app.post(
 			publicKey: env.DiscordPublicKey,
 			events: createEvents({
 				commands,
+				components,
 			}),
 		}),
 );

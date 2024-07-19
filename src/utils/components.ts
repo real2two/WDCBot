@@ -1,4 +1,13 @@
-import buttonComponent from "../components/button";
+import { Component } from "@httpi/client";
+import { Glob } from "bun";
 
-// Export all components here
-export default [buttonComponent];
+const glob = new Glob("*.ts");
+const imports = await Promise.all(
+	[...glob.scanSync("./src/components")].map(
+		(f) => import(`../components/${f}`),
+	),
+);
+
+export default imports
+	.map((i) => i.default)
+	.filter((c) => c instanceof Component);

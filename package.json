@@ -16,6 +16,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.1",
 		"@discordjs/core": "^1.2.0",
+		"@types/bun": "^1.1.6",
 		"discord-api-types": "^0.37.90"
-	}
+	},
+	"trustedDependencies": ["@biomejs/biome"]
 }

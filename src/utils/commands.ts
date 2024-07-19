@@ -1,13 +1,11 @@
-import testCommand from "../commands/command";
-import subcommandCommand from "../commands/subcommand";
+import { Command } from "@httpi/client";
+import { Glob } from "bun";
 
-import messageRightClickCommand from "../commands/messageRightClick";
-import userRightClickCommand from "../commands/userRightClick";
+const glob = new Glob("*.ts");
+const imports = await Promise.all(
+	[...glob.scanSync("./src/commands")].map((f) => import(`../commands/${f}`)),
+);
 
-// Export all commands here
-export default [
-	testCommand,
-	subcommandCommand,
-	userRightClickCommand,
-	messageRightClickCommand,
-];
+export default imports
+	.map((i) => i.default)
+	.filter((c) => c instanceof Command);
