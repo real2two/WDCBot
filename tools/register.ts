@@ -1,11 +1,11 @@
-import env from "../src/utils/env";
-import { createCommands } from "@httpi/client";
-import commands from "../src/utils/commands";
+import env from '../src/main/env';
+import { createCommands } from '@httpi/client';
+import commands from '../src/main/commands';
 
 const result = await createCommands({
-	id: env.DiscordClientId,
-	token: env.DiscordToken,
-	commands,
+  id: env.DiscordClientId,
+  token: env.DiscordToken,
+  commands,
 });
 
 console.log(result);

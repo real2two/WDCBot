@@ -1,23 +1,23 @@
 {
-	"name": "wdcbot",
-	"type": "module",
-	"main": "src/http/listen.ts",
-	"scripts": {
-		"start": "bun .",
-		"dev": "bun --watch .",
-		"format": "biome format --write ./",
-		"register": "bun tools/register.ts",
-		"cf": "cloudflared tunnel run"
-	},
-	"dependencies": {
-		"@httpi/adapter-hono": "^1.0.4",
-		"@httpi/client": "^1.0.9"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.8.1",
-		"@discordjs/core": "^1.2.0",
-		"@types/bun": "^1.1.6",
-		"discord-api-types": "^0.37.90"
-	},
-	"trustedDependencies": ["@biomejs/biome"]
+  "name": "wdcbot",
+  "type": "module",
+  "main": "src/main/listen.ts",
+  "scripts": {
+    "start": "bun .",
+    "dev": "bun --watch .",
+    "format": "biome format --write ./",
+    "register": "bun tools/register.ts",
+    "cf": "cloudflared tunnel run"
+  },
+  "dependencies": {
+    "@httpi/adapter-hono": "^1.0.4",
+    "@httpi/client": "^1.0.9"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.1",
+    "@discordjs/core": "^1.2.0",
+    "@types/bun": "^1.1.6",
+    "discord-api-types": "^0.37.90"
+  },
+  "trustedDependencies": ["@biomejs/biome"]
 }
