@@ -10,7 +10,7 @@ import { ButtonStyle, ComponentType } from '@discordjs/core';
 import { fetchDbGame, createDbGame } from '../framework/main/database';
 import { updatePlayer } from '../framework/main/players';
 import { createPrepEmbeds } from '../utils/embeds';
-import { WDCGameState, type WDCGame } from '../framework/main/types';
+import { WDCGameState, type WDCGame } from '../framework/types';
 
 export default new Command({
   data: {
@@ -67,14 +67,20 @@ export default new Command({
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Primary,
-                custom_id: `g:${game.channelId}:join`,
+                custom_id: 'g:join',
                 label: 'Join',
               },
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Secondary,
-                custom_id: `g:${game.channelId}:start`,
+                custom_id: 'g:start',
                 label: 'Start game',
+              },
+              {
+                type: ComponentType.Button,
+                style: ButtonStyle.Danger,
+                custom_id: 'g:disband:start',
+                label: 'Disband game',
               },
             ],
           },

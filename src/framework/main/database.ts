@@ -1,4 +1,4 @@
-import type { WDCGame } from './types';
+import type { WDCGame } from '../types';
 
 const games = new Map<string, WDCGame>();
 const cloneGameObj = (v: WDCGame) => JSON.parse(JSON.stringify(v)) as WDCGame;

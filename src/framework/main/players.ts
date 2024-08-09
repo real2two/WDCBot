@@ -1,4 +1,4 @@
-import type { WDCGame, WDCPlayer } from './types';
+import type { WDCGame, WDCPlayer } from '../types';
 
 export function getPlayer(game: WDCGame, userId: string) {
   return game.players.find((p) => p.userId === userId);

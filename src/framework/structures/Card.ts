@@ -1,4 +1,4 @@
-import type { WDCGame } from '../main/types';
+import type { WDCGame } from '../types';
 
 export class Card {
   id: string;

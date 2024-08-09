@@ -1,10 +1,10 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { fetchDbGame, saveDbGame } from '../framework/main/database';
-import { WDCGameState } from '../framework/main/types';
+import { WDCGameState } from '../framework/types';
 
 export default new Component({
-  customId: /^g:[0-9]+:start$/,
+  customId: /^g:start$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;

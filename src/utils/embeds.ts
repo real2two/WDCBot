@@ -1,4 +1,4 @@
-import type { WDCGame } from '../framework/main/types';
+import type { WDCGame } from '../framework/types';
 
 export function createPrepEmbeds(game: WDCGame) {
   return [
