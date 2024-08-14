@@ -50,7 +50,9 @@ export default new Component({
       updatePlayer(game, {
         // Join game
         userId: user.id,
+        health: 0,
         cards: [],
+        effects: [],
       });
     }
     await saveDbGame(game);

@@ -14,10 +14,23 @@ export enum WDCGameState {
 
 export interface WDCPlayer {
   userId: string;
+  health: number;
   cards: WDCCards[];
+  effects: WDCEffects[];
 }
 
-export type WDCCards = WDCCardTemplate;
-export interface WDCCardTemplate {
+export type WDCCards = WDCCardBase;
+export interface WDCCardBase {
   cardId: string;
+  quantity: number | null;
+  turnsUntilUsable: number; // 0 by default
+}
+
+export type WDCEffects = WDCEffectBase | WDCEffectPowerup;
+export interface WDCEffectPowerup {
+  effectId: 'powerup';
+  turnsLeft: number;
+}
+export interface WDCEffectBase {
+  effectId: string;
 }

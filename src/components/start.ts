@@ -1,3 +1,4 @@
+import cards from '../framework/loaders/cards';
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { fetchDbGame, saveDbGame } from '../framework/main/database';
@@ -55,21 +56,32 @@ export default new Component({
     await saveDbGame(game);
 
     // Setup the game (classic gamemode)
+    const classicCards = [
+      'slash',
+      'shield',
+      'heal',
+      'laser',
+      'reflect',
+      'powerup',
+      'blindshot',
+      'alternator',
+    ];
     for (const player of game.players) {
-      player.cards = [
-        { cardId: 'slash' },
-        { cardId: 'shield' },
-        { cardId: 'heal' },
-        { cardId: 'laser' },
-        { cardId: 'reflect' },
-        { cardId: 'powerup' },
-        { cardId: 'blindshot' },
-        { cardId: 'alternator' },
-      ];
+      player.cards = [];
+      for (const cardId of classicCards) {
+        const card = cards.find(({ id }) => cardId === id)!;
+        player.cards.push({
+          cardId: card.id,
+          quantity: card.quantity,
+          turnsUntilUsable: 0,
+        });
+      }
     }
 
     // Start the game
     game.state = WDCGameState.Started;
+
+    console.log(JSON.stringify(game, null, 2));
 
     return respond({
       type: InteractionResponseType.ChannelMessageWithSource,

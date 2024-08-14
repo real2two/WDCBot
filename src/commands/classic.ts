@@ -50,7 +50,9 @@ export default new Command({
 
     updatePlayer(game, {
       userId: user.id,
+      health: 0,
       cards: [],
+      effects: [],
     });
 
     await createDbGame(game);

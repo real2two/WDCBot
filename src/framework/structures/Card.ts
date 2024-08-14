@@ -8,18 +8,18 @@ export class Card {
   order: number;
   suborder: number;
   turnCooldown: number;
-  quantity: number;
+  quantity: number | null;
   execute: (ctx: { game: WDCGame }) => void;
 
   constructor({
     id,
     name,
     description,
-    image = 'https://upload.wikimedia.org/wikipedia/commons/e/e0/PlaceholderLC.png',
-    order = 0,
-    suborder = 0,
-    turnCooldown = 0,
-    quantity = Number.POSITIVE_INFINITY,
+    image,
+    order,
+    suborder,
+    turnCooldown,
+    quantity,
     execute,
   }: {
     id: string;
@@ -35,11 +35,11 @@ export class Card {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.image = image;
-    this.order = order;
-    this.suborder = suborder;
-    this.turnCooldown = turnCooldown;
-    this.quantity = quantity;
+    this.image = image || 'https://upload.wikimedia.org/wikipedia/commons/e/e0/PlaceholderLC.png';
+    this.order = order || 0;
+    this.suborder = suborder || 0;
+    this.turnCooldown = turnCooldown || 0;
+    this.quantity = quantity || Number.POSITIVE_INFINITY;
     this.execute = execute;
   }
 }
