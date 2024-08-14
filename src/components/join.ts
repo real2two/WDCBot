@@ -1,8 +1,5 @@
 import { Component } from '@httpi/client';
-import {
-  InteractionResponseType,
-  MessageFlags,
-} from 'discord-api-types/v10';
+import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { fetchDbGame, saveDbGame } from '../framework/main/database';
 import { createPrepEmbeds } from '../utils/embeds';
 import { getPlayer, removePlayer, updatePlayer } from '../framework/main/players';

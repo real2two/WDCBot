@@ -56,17 +56,16 @@ export default new Component({
 
     // Setup the game (classic gamemode)
     for (const player of game.players) {
-      player.cards = [];
-      /*
-				slash
-				shield
-				heal
-				laser
-				reflect
-				powerup
-				blindshot
-				alternator
-			*/
+      player.cards = [
+        { cardId: 'slash' },
+        { cardId: 'shield' },
+        { cardId: 'heal' },
+        { cardId: 'laser' },
+        { cardId: 'reflect' },
+        { cardId: 'powerup' },
+        { cardId: 'blindshot' },
+        { cardId: 'alternator' },
+      ];
     }
 
     // Start the game

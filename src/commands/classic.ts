@@ -72,15 +72,15 @@ export default new Command({
               },
               {
                 type: ComponentType.Button,
-                style: ButtonStyle.Secondary,
+                style: ButtonStyle.Success,
                 custom_id: 'g:start',
-                label: 'Start game',
+                label: 'Start',
               },
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Danger,
                 custom_id: 'g:disband:start',
-                label: 'Disband game',
+                label: 'Disband',
               },
             ],
           },
