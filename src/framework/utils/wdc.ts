@@ -13,5 +13,7 @@ export function createWDCGame(game: WDCGame) {
 }
 
 export function deleteWDCGame(channelId: string) {
+  // TODO: End the game loop here as well
+
   games.delete(channelId);
 }

@@ -28,16 +28,6 @@ export default new Subcommand({
       });
     }
 
-    if (game.state !== WDCGameState.Prep) {
-      return respond({
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: {
-          content: '❌ Cannot disband a game that already started!',
-          flags: MessageFlags.Ephemeral,
-        },
-      });
-    }
-
     if (user.id !== game.hostId && !hasManageGuild(interaction.member?.permissions)) {
       return respond({
         type: InteractionResponseType.ChannelMessageWithSource,
