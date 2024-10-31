@@ -6,7 +6,7 @@ export function startGame(
   game: WDCGame,
   respond: (message: CustomAPIInteractionResponse) => unknown,
 ) {
-  // TODO: Have a way to disband the game after it starts
+  // TODO: Have a way to disband the game after it starts (yes I wrote this comment twice)
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
   return respond({
