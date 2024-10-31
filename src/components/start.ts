@@ -79,6 +79,6 @@ export default new Component({
     game.state = WDCGameState.Started;
 
     // Start game
-    startGame(game, respond);
+    startGame({ interaction, respond, game });
   },
 });
