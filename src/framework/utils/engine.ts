@@ -1,6 +1,6 @@
+import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import type { CustomAPIInteractionResponse } from '@httpi/client';
 import type { WDCGame } from '../types';
-import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 
 export function startGame(
   game: WDCGame,
