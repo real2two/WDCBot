@@ -1,8 +1,6 @@
-import cards from '../framework/loaders/cards';
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { fetchDbGame, saveDbGame } from '../framework/main/database';
-import { WDCGameState } from '../framework/types';
+import { cards, getWDCGame, startGame, WDCGameState } from '../framework';
 
 export default new Component({
   customId: /^g:start$/,
@@ -10,7 +8,7 @@ export default new Component({
     const channelId = interaction.channel?.id;
     if (!channelId) return;
 
-    const game = await fetchDbGame(channelId);
+    const game = getWDCGame(channelId);
     if (!game) {
       return respond({
         type: InteractionResponseType.ChannelMessageWithSource,
@@ -53,7 +51,6 @@ export default new Component({
 
     // Set the game's state as loading
     game.state = WDCGameState.Loading;
-    await saveDbGame(game);
 
     // Setup the game (classic gamemode)
     const classicCards = [
@@ -81,14 +78,7 @@ export default new Component({
     // Start the game
     game.state = WDCGameState.Started;
 
-    console.log(JSON.stringify(game, null, 2));
-
-    return respond({
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: {
-        content: 'super big wip start',
-        flags: MessageFlags.Ephemeral,
-      },
-    });
+    // Start game
+    startGame(game, respond);
   },
 });

@@ -8,7 +8,7 @@ export class Card {
   order: number;
   suborder: number;
   turnCooldown: number;
-  quantity: number | null;
+  quantity: number;
   execute: (ctx: { game: WDCGame }) => void;
 
   constructor({

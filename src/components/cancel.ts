@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType } from 'discord-api-types/v10';
-import { sendInteractionResponse, deleteInteractionResponse } from '../utils/webhooks';
+import { sendInteractionResponse, deleteInteractionResponse } from '../utils';
 
 export default new Component({
   customId: /^cancel$/,

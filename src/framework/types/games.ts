@@ -22,7 +22,7 @@ export interface WDCPlayer {
 export type WDCCards = WDCCardBase;
 export interface WDCCardBase {
   cardId: string;
-  quantity: number | null;
+  quantity: number;
   turnsUntilUsable: number; // 0 by default
 }
 

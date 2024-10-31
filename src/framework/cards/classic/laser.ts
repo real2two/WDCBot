@@ -1,4 +1,4 @@
-import { Card } from '../structures/Card';
+import { Card } from '../../structures';
 
 export default new Card({
   id: 'laser',
