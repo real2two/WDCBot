@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { cards, getWDCGame, startGame, WDCGameState } from '../framework';
+import { cards, getWDCGame, startGameLoop, WDCGameState } from '../framework';
 
 export default new Component({
   customId: /^g:start$/,
@@ -79,6 +79,6 @@ export default new Component({
     game.state = WDCGameState.Started;
 
     // Start game
-    startGame({ interaction, respond, game });
+    return startGameLoop({ interaction, game });
   },
 });

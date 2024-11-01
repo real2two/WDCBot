@@ -3,23 +3,27 @@ import type { BaseInteraction, CustomAPIInteractionResponse } from '@httpi/clien
 import { sendInteractionFollowup, sendInteractionResponse } from 'src/utils';
 import type { WDCGame } from '../types';
 
-export async function startGame({
+export function startGameLoop({
   interaction,
-  respond,
+  game,
+}: { interaction: BaseInteraction; game: WDCGame }) {
+  return handleGameLoop({ interaction, game });
+}
+
+export async function handleGameLoop({
+  interaction,
   game,
 }: {
   interaction: BaseInteraction;
-  respond: (message: CustomAPIInteractionResponse) => unknown;
   game: WDCGame;
 }) {
   // TODO: Have a way to disband the game after it starts (yes I wrote this comment twice)
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
   await sendInteractionResponse(interaction, {
-    type: InteractionResponseType.DeferredChannelMessageWithSource,
-  });
-
-  await sendInteractionFollowup(interaction, {
-    content: 'lmao',
+    type: InteractionResponseType.ChannelMessageWithSource,
+    data: {
+      content: 'handle game loop',
+    },
   });
 }
