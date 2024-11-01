@@ -76,7 +76,6 @@ export default new Component({
               ],
             },
           ],
-          flags: MessageFlags.Ephemeral,
         },
       });
     }
@@ -84,29 +83,17 @@ export default new Component({
     if (option === 'confirm') {
       deleteWDCGame(channelId);
 
-      await sendInteractionResponse(interaction, {
-        type: InteractionResponseType.DeferredMessageUpdate,
-      });
-
-      if (interaction.message?.id) {
-        await editInteractionFollowup(interaction, interaction.message?.id, {
+      return sendInteractionResponse(interaction, {
+        type: InteractionResponseType.UpdateMessage,
+        data: {
           embeds: [
             {
               color: 0xa2231d,
-              description: '**💣 Disbanding game...**',
+              description: '🗑️ **The game has been disbanded!**',
             },
           ],
           components: [],
-        });
-      }
-
-      return sendInteractionFollowup(interaction, {
-        embeds: [
-          {
-            color: 0xa2231d,
-            description: '🗑️ **The game has been disbanded!**',
-          },
-        ],
+        },
       });
     }
   },

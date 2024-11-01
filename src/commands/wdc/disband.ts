@@ -70,7 +70,6 @@ export default new Subcommand({
             ],
           },
         ],
-        flags: MessageFlags.Ephemeral,
       },
     });
   },
