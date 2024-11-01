@@ -4,6 +4,7 @@ export interface WDCGame {
   mode: 'classic';
   state: WDCGameState;
   players: WDCPlayer[];
+  loopTimer: Timer | null;
 }
 
 export enum WDCGameState {

@@ -3,8 +3,7 @@ import type { WDCGame } from '../types';
 const games = new Map<string, WDCGame>();
 
 export function getWDCGame(channelId: string) {
-  const game = games.get(channelId);
-  return game;
+  return games.get(channelId);
 }
 
 export function createWDCGame(game: WDCGame) {
@@ -13,7 +12,9 @@ export function createWDCGame(game: WDCGame) {
 }
 
 export function deleteWDCGame(channelId: string) {
-  // TODO: End the game loop here as well (yes I wrote this comment twice)
-
+  const game = games.get(channelId);
+  if (game?.loopTimer) {
+    clearTimeout(game.loopTimer);
+  }
   games.delete(channelId);
 }

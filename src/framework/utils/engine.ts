@@ -17,8 +17,10 @@ export async function handleGameLoop({
   interaction: BaseInteraction;
   game: WDCGame;
 }) {
-  // TODO: Have a way to disband the game after it starts (yes I wrote this comment twice)
   // TODO: Have an "automatic disband" system in place if messages stop being sent
+
+  // TODO: TO handle timeout loops, use this function
+  // game.loopTimer = setTimeout(() => {});
 
   await sendInteractionResponse(interaction, {
     type: InteractionResponseType.ChannelMessageWithSource,
