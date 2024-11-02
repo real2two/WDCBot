@@ -8,7 +8,7 @@ export interface WDCGame {
   players: WDCPlayer[];
   loopTimer: Timer | null;
   usedCardsWithBeforeAfterFunctions: Set<Card>;
-  kv: Map<string, object>;
+  kv: Map<string, boolean | number | string | object>;
   turnsPerRound: number;
 }
 
