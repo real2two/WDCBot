@@ -5,7 +5,7 @@ export interface WDCGame {
   hostId: string;
   mode: 'classic';
   state: WDCGameState;
-  players: WDCPlayer[];
+  players: WDCGamePlayer[];
   loopTimer: Timer | null;
   usedCardsWithBeforeAfterFunctions: Set<Card>;
   kv: Map<string, boolean | number | string | object>;
@@ -18,15 +18,14 @@ export enum WDCGameState {
   Started = 2,
 }
 
-export interface WDCPlayer {
+export interface WDCGamePlayer {
   userId: string;
   health: number;
-  cards: WDCCards[];
+  cards: WDCGamePlayerCard[];
 }
 
-export type WDCCards = WDCCardBase;
-export interface WDCCardBase {
+export type WDCGamePlayerCard = {
   cardId: string;
   quantity: number;
   turnsUntilUsable: number; // 0 by default
-}
+};
