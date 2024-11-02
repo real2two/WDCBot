@@ -17,6 +17,8 @@ export async function handleGameLoop({
   interaction: BaseInteraction;
   game: WDCGame;
 }) {
+  // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
+
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
   // TODO: Handle kicking AFK users

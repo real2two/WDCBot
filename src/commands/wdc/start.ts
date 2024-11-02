@@ -35,17 +35,18 @@ export default new Subcommand({
       hostId: user.id,
       mode: 'classic',
       state: WDCGameState.Prep,
+      turnsPerRound: 4,
       players: [],
       loopTimer: null,
       usedCardsWithBeforeAfterFunctions: new Set(),
       kv: new Map(),
-      turnsPerRound: 4,
     };
 
     updatePlayer(game, {
       userId: user.id,
       health: 0,
       cards: [],
+      chosenCardIds: [],
     });
 
     createWDCGame(game);
