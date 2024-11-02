@@ -19,6 +19,10 @@ export async function handleGameLoop({
 }) {
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
+  // TODO: Handle kicking AFK users
+
+  // TODO: Remember game.turnsPerRound exists (default: 4), so remember to support that!
+
   // TODO: TO handle timeout loops, use this function
   // game.loopTimer = setTimeout(() => {});
 

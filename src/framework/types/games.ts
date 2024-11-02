@@ -5,6 +5,7 @@ export interface WDCGame {
   state: WDCGameState;
   players: WDCPlayer[];
   loopTimer: Timer | null;
+  turnsPerRound: number;
 }
 
 export enum WDCGameState {

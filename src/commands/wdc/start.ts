@@ -37,6 +37,7 @@ export default new Subcommand({
       state: WDCGameState.Prep,
       players: [],
       loopTimer: null,
+      turnsPerRound: 4,
     };
 
     updatePlayer(game, {

@@ -30,20 +30,19 @@ export default new Component({
       });
     }
 
-    if (user.id === game.hostId) {
-      return respond({
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: {
-          content: '❌ Cannot leave the game as the host!',
-          flags: MessageFlags.Ephemeral,
-        },
-      });
-    }
-
     const player = getPlayer(game, user.id);
     if (player) {
       // Leave game
       removePlayer(game, player.userId);
+    } else if (game.players.length >= 25) {
+      // Fails to join game, because the game is already full
+      return respond({
+        type: InteractionResponseType.ChannelMessageWithSource,
+        data: {
+          content: '❌ Cannot join game that is already full! (25)',
+          flags: MessageFlags.Ephemeral,
+        },
+      });
     } else {
       updatePlayer(game, {
         // Join game

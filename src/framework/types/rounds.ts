@@ -3,8 +3,6 @@ export interface WDCRound {
   turns: WDCTurns[];
 }
 
-export interface WDCTurns {
-  turn: WDCTurn[];
-}
+export type WDCTurns = WDCTurn[];
 
 export interface WDCTurn {}
