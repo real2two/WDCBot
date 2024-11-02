@@ -29,7 +29,6 @@ export default new Subcommand({
       hostId: user.id,
       mode: 'classic',
       state: WDCGameState.Prep,
-      turnsPerRound: 4,
       publicInventory: true,
       players: [],
       round: 0,
@@ -42,7 +41,7 @@ export default new Subcommand({
       userId: user.id,
       health: 0,
       cards: [],
-      chosenCardIds: [],
+      chosenCardIds: [null, null, null, null],
     });
 
     createWDCGame(game);

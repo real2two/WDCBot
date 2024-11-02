@@ -7,7 +7,6 @@ export interface WDCGame {
   // Settings
   mode: 'classic';
   state: WDCGameState;
-  turnsPerRound: number;
   publicInventory: boolean;
   // Players
   players: WDCGamePlayer[];
@@ -28,7 +27,7 @@ export interface WDCGamePlayer {
   userId: string;
   health: number;
   cards: WDCGamePlayerCard[];
-  chosenCardIds: string[];
+  chosenCardIds: [string | null, string | null, string | null, string | null];
 }
 
 export type WDCGamePlayerCard = {

@@ -17,13 +17,10 @@ export async function handleGameLoop({
   game: WDCGame;
 }) {
   // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
-  // TODO: Make sure to clear <WDCGamePlayer>.chosenCardIds after a round ends (or turn 1 starts)
 
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
   // TODO: Handle kicking AFK users
-
-  // TODO: Remember game.turnsPerRound exists (default: 4), so remember to support that!
 
   // TODO: To handle timeout loops, use this function
   //       game.loopTimer = setTimeout(() => {});
@@ -34,6 +31,11 @@ export async function handleGameLoop({
 
   // Update the game's round (+1)
   game.round++;
+
+  // Clear cards selected from game
+  for (const player of game.players) {
+    player.chosenCardIds = [null, null, null, null];
+  }
 
   // Create response
   await sendInteractionResponse(interaction, {
