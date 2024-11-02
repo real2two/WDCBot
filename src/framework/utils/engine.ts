@@ -23,8 +23,12 @@ export async function handleGameLoop({
 
   // TODO: Remember game.turnsPerRound exists (default: 4), so remember to support that!
 
-  // TODO: TO handle timeout loops, use this function
-  // game.loopTimer = setTimeout(() => {});
+  // TODO: To handle timeout loops, use this function
+  //       game.loopTimer = setTimeout(() => {});
+
+  // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
+  //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
+  //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
 
   await sendInteractionResponse(interaction, {
     type: InteractionResponseType.ChannelMessageWithSource,

@@ -11,6 +11,8 @@ export class Card {
   turnCooldown: number;
   quantity: number;
   execute: (ctx: { game: WDCGame }) => void;
+  beforeOrder?: (ctx: { game: WDCGame }) => void;
+  afterOrder?: (ctx: { game: WDCGame }) => void;
 
   constructor({
     id,
@@ -23,6 +25,8 @@ export class Card {
     turnCooldown,
     quantity,
     execute,
+    beforeOrder,
+    afterOrder,
   }: {
     id: string;
     types: CardType[];
@@ -34,6 +38,8 @@ export class Card {
     turnCooldown?: number;
     quantity?: number;
     execute: Card['execute'];
+    beforeOrder?: Card['beforeOrder'];
+    afterOrder?: Card['afterOrder'];
   }) {
     this.id = id;
     this.types = types;
@@ -45,5 +51,7 @@ export class Card {
     this.turnCooldown = turnCooldown || 0;
     this.quantity = quantity || Number.POSITIVE_INFINITY;
     this.execute = execute;
+    this.beforeOrder = beforeOrder;
+    this.afterOrder = afterOrder;
   }
 }

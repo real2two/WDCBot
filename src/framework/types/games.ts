@@ -1,3 +1,5 @@
+import type { Card } from '../structures';
+
 export interface WDCGame {
   channelId: string;
   hostId: string;
@@ -5,6 +7,7 @@ export interface WDCGame {
   state: WDCGameState;
   players: WDCPlayer[];
   loopTimer: Timer | null;
+  usedCardsWithBeforeAfterFunctions: Set<Card>;
   kv: Map<string, object>;
   turnsPerRound: number;
 }

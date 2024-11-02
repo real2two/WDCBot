@@ -37,6 +37,7 @@ export default new Subcommand({
       state: WDCGameState.Prep,
       players: [],
       loopTimer: null,
+      usedCardsWithBeforeAfterFunctions: new Set(),
       kv: new Map(),
       turnsPerRound: 4,
     };
