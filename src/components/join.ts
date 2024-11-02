@@ -49,6 +49,7 @@ export default new Component({
         userId: user.id,
         health: 0,
         cards: [],
+        submittedChosenCards: false,
         chosenCardIds: [null, null, null, null],
       });
     }

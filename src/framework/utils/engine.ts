@@ -9,7 +9,7 @@ import { sendInteractionFollowup, sendInteractionResponse } from '../../utils';
 import { cards } from '../cards';
 import type { WDCGame } from '../types';
 
-export async function handleGameLoop({
+export async function handleRoundLoop({
   interaction,
   game,
 }: {
@@ -17,20 +17,16 @@ export async function handleGameLoop({
   game: WDCGame;
 }) {
   // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
-
-  // TODO: Have an "automatic disband" system in place if messages stop being sent
-
-  // TODO: Handle kicking AFK users
-
-  // TODO: To handle timeout loops, use this function
-  //       game.loopTimer = setTimeout(() => {});
-
-  // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
-  //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
-  //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+  // TODO: Disallow players from selecting cards if <WDCGame>.currentlyHandlingTurns is true
 
   // Update the game's round (+1)
   game.round++;
+
+  // Allows users to use cards again and set submit state as false
+  for (const player of game.players) {
+    player.submittedChosenCards = false;
+  }
+  game.currentlyHandlingTurns = false;
 
   // Clear cards selected from game
   for (const player of game.players) {
@@ -83,5 +79,73 @@ export async function handleGameLoop({
         },
       ],
     },
+  });
+
+  // Set warning timers
+  game.loopTimers.push(
+    setTimeout(
+      () =>
+        sendInteractionFollowup(interaction, {
+          content: '🕚 You have **10 more seconds left** to select your cards!',
+        }),
+      50000,
+    ),
+  );
+
+  game.loopTimers.push(
+    setTimeout(
+      () =>
+        sendInteractionFollowup(interaction, {
+          content: '‼️ You have **5 more seconds left** to select your cards!',
+        }),
+      55000,
+    ),
+  );
+
+  // Set handleTurnLoop timer if someone doesn't choose all their cards in time
+  game.loopTimers.push(setTimeout(() => handleTurnLoop({ interaction, game }), 60000));
+}
+
+export async function handleTurnLoop({
+  interaction,
+  game,
+}: {
+  interaction: BaseInteraction;
+  game: WDCGame;
+}) {
+  // Check if you're currently handling turns (prevents race-condition)
+  if (game.currentlyHandlingTurns) return;
+  game.currentlyHandlingTurns = true;
+
+  // Clear all timers
+  for (const timer of game.loopTimers ?? []) {
+    clearTimeout(timer);
+  }
+
+  // Handle kicking AFK users
+  const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
+  if (afkPlayers.length) {
+    for (const player of afkPlayers) {
+      player.health = 0;
+    }
+
+    // TODO: Add messages for killing AFK users
+    // const afkPlayerMentions = afkPlayers.map((p) => `<@${p.userId}>`);
+    // if (afkPlayers.length === 1) {
+    //   afkPlayerMentions[0];
+    // } else {
+    //   `${afkPlayerMentions.slice(0, -1).join(', ')} and ${afkPlayerMentions.slice(-1)}`;
+    // }
+  }
+
+  // TODO: Have an "automatic disband" system in place if messages stop being sent
+  // TODO: Have a button the host has to press to go to start the next round (to mitigate the 15 minute interaction limit issue)
+
+  // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
+  //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
+  //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+
+  await sendInteractionFollowup(interaction, {
+    content: 'handle turn loop',
   });
 }

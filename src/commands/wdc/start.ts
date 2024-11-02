@@ -32,7 +32,8 @@ export default new Subcommand({
       publicInventory: true,
       players: [],
       round: 0,
-      loopTimer: null,
+      currentlyHandlingTurns: false,
+      loopTimers: [],
       usedCardsWithBeforeAfterFunctions: new Set(),
       kv: new Map(),
     };
@@ -41,6 +42,7 @@ export default new Subcommand({
       userId: user.id,
       health: 0,
       cards: [],
+      submittedChosenCards: false,
       chosenCardIds: [null, null, null, null],
     });
 

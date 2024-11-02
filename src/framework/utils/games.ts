@@ -13,8 +13,9 @@ export function createWDCGame(game: WDCGame) {
 
 export function deleteWDCGame(channelId: string) {
   const game = games.get(channelId);
-  if (game?.loopTimer) {
-    clearTimeout(game.loopTimer);
+  for (const timer of game?.loopTimers ?? []) {
+    clearTimeout(timer);
   }
+
   games.delete(channelId);
 }

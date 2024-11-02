@@ -12,7 +12,8 @@ export interface WDCGame {
   players: WDCGamePlayer[];
   // Loop / Cards
   round: number;
-  loopTimer: Timer | null;
+  currentlyHandlingTurns: boolean;
+  loopTimers: Timer[];
   usedCardsWithBeforeAfterFunctions: Set<Card>;
   kv: Map<string, boolean | number | string | object>;
 }
@@ -27,6 +28,7 @@ export interface WDCGamePlayer {
   userId: string;
   health: number;
   cards: WDCGamePlayerCard[];
+  submittedChosenCards: boolean;
   chosenCardIds: [string | null, string | null, string | null, string | null];
 }
 
