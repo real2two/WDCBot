@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { cards, getWDCGame, startGameLoop, WDCGameState } from '../framework';
+import { cards, getWDCGame, handleGameLoop, WDCGameState } from '../framework';
 
 export default new Component({
   customId: /^g:start$/,
@@ -64,6 +64,8 @@ export default new Component({
       'classic:alternator',
     ];
     for (const player of game.players) {
+      player.health = 7;
+
       player.cards = [];
       for (const cardId of classicCards) {
         const card = cards.find(({ id }) => cardId === id)!;
@@ -79,6 +81,6 @@ export default new Component({
     game.state = WDCGameState.Started;
 
     // Start game
-    return startGameLoop({ interaction, game });
+    return handleGameLoop({ interaction, game });
   },
 });

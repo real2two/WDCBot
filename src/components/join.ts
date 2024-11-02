@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { getWDCGame, getPlayer, removePlayer, updatePlayer, WDCGameState } from '../framework';
+import { getWDCGame, getPlayer, removePlayer, WDCGameState } from '../framework';
 import { createPrepEmbeds } from '../utils';
 
 export default new Component({
@@ -44,7 +44,7 @@ export default new Component({
         },
       });
     } else {
-      updatePlayer(game, {
+      game.players.push({
         // Join game
         userId: user.id,
         health: 0,

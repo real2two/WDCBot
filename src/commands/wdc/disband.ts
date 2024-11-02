@@ -5,7 +5,7 @@ import {
   InteractionResponseType,
   MessageFlags,
 } from 'discord-api-types/v10';
-import { getWDCGame } from 'src/framework';
+import { getWDCGame } from '../../framework';
 import { hasManageGuild } from '../../utils';
 
 export default new Subcommand({

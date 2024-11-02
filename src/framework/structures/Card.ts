@@ -6,6 +6,7 @@ export class Card {
   name: string;
   description: string;
   image: string;
+  emoji?: string;
   order: number;
   suborder: number;
   turnCooldown: number;
@@ -20,6 +21,7 @@ export class Card {
     types,
     description,
     image,
+    emoji,
     order,
     suborder,
     turnCooldown,
@@ -33,6 +35,7 @@ export class Card {
     name: string;
     description: string;
     image?: string;
+    emoji?: string;
     order?: number;
     suborder?: number;
     turnCooldown?: number;
@@ -46,6 +49,7 @@ export class Card {
     this.name = name;
     this.description = description;
     this.image = image || 'https://upload.wikimedia.org/wikipedia/commons/e/e0/PlaceholderLC.png';
+    this.emoji = emoji;
     this.order = order || 0;
     this.suborder = suborder || 0;
     this.turnCooldown = turnCooldown || 0;

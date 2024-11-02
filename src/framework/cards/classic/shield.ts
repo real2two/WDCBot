@@ -7,6 +7,7 @@ export default new Card({
   name: 'Shield',
   description: 'Block damage for a specific turn.',
   image: 'https://i.imgur.com/rSLPXps.png',
+  emoji: '🛡️',
   order: 0,
   suborder: 0,
   quantity: 6,

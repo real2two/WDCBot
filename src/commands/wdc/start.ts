@@ -2,13 +2,7 @@ import { Subcommand } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { ButtonStyle, ComponentType } from '@discordjs/core';
 
-import {
-  getWDCGame,
-  createWDCGame,
-  updatePlayer,
-  WDCGameState,
-  type WDCGame,
-} from '../../framework';
+import { getWDCGame, createWDCGame, WDCGameState, type WDCGame } from '../../framework';
 import { createPrepEmbeds } from '../../utils';
 
 export default new Subcommand({
@@ -36,13 +30,15 @@ export default new Subcommand({
       mode: 'classic',
       state: WDCGameState.Prep,
       turnsPerRound: 4,
+      publicInventory: true,
       players: [],
+      round: 0,
       loopTimer: null,
       usedCardsWithBeforeAfterFunctions: new Set(),
       kv: new Map(),
     };
 
-    updatePlayer(game, {
+    game.players.push({
       userId: user.id,
       health: 0,
       cards: [],

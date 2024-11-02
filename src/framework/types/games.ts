@@ -8,9 +8,11 @@ export interface WDCGame {
   mode: 'classic';
   state: WDCGameState;
   turnsPerRound: number;
+  publicInventory: boolean;
   // Players
   players: WDCGamePlayer[];
   // Loop / Cards
+  round: number;
   loopTimer: Timer | null;
   usedCardsWithBeforeAfterFunctions: Set<Card>;
   kv: Map<string, boolean | number | string | object>;

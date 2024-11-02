@@ -7,6 +7,7 @@ export default new Card({
   name: 'Powerup',
   description: 'Double your damage for the next turn only.',
   image: 'https://i.imgur.com/KoiBNIw.png',
+  emoji: '⚡',
   order: 0,
   suborder: 0,
   quantity: 1,

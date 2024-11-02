@@ -1,14 +1,13 @@
-import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
+import {
+  ButtonStyle,
+  ComponentType,
+  InteractionResponseType,
+  MessageFlags,
+} from 'discord-api-types/v10';
 import type { BaseInteraction, CustomAPIInteractionResponse } from '@httpi/client';
-import { sendInteractionFollowup, sendInteractionResponse } from 'src/utils';
+import { sendInteractionFollowup, sendInteractionResponse } from '../../utils';
+import { cards } from '../cards';
 import type { WDCGame } from '../types';
-
-export function startGameLoop({
-  interaction,
-  game,
-}: { interaction: BaseInteraction; game: WDCGame }) {
-  return handleGameLoop({ interaction, game });
-}
 
 export async function handleGameLoop({
   interaction,
@@ -33,10 +32,53 @@ export async function handleGameLoop({
   //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
   //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
 
+  // Update the game's round (+1)
+  game.round++;
+
+  // Create response
+
+  // TODO: For custom games, inventories should be private to the user only.
+
+  const playersText: string[] = [];
+  for (const player of game.players) {
+    let text = `- <@${player.userId}> ❤️ ${player.health}`;
+    if (game.publicInventory) {
+      for (const { cardId, quantity } of player.cards) {
+        if (quantity === Number.POSITIVE_INFINITY) continue;
+        text += ` ${cards.find((c) => cardId === c.id)?.emoji || '❓'} ${quantity}`;
+      }
+    }
+    playersText.push(text);
+  }
+
   await sendInteractionResponse(interaction, {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
-      content: 'handle game loop',
+      embeds: [
+        {
+          color: 0x57f287,
+          description: `## Round ${game.round}\n\n${playersText.join('\n')}`,
+          footer: {
+            text: 'Click on the button below to select your cards within 1 minute!',
+          },
+        },
+      ],
+      components: [
+        {
+          type: ComponentType.ActionRow,
+          components: [
+            {
+              type: ComponentType.Button,
+              style: ButtonStyle.Primary,
+              custom_id: 'select_cards',
+              label: 'Select your cards',
+              emoji: {
+                name: '🎴',
+              },
+            },
+          ],
+        },
+      ],
     },
   });
 }
