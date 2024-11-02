@@ -1,7 +1,9 @@
 import { Card } from '../../structures';
+import { CardType } from '../../types';
 
 export default new Card({
   id: 'shield',
+  types: [CardType.Defensive],
   name: 'Shield',
   description: 'Block damage for a specific turn.',
   image: 'https://i.imgur.com/rSLPXps.png',

@@ -1,7 +1,8 @@
-import type { WDCGame } from '../types';
+import type { CardType, WDCGame } from '../types';
 
 export class Card {
   id: string;
+  types: CardType[];
   name: string;
   description: string;
   image: string;
@@ -14,6 +15,7 @@ export class Card {
   constructor({
     id,
     name,
+    types,
     description,
     image,
     order,
@@ -23,6 +25,7 @@ export class Card {
     execute,
   }: {
     id: string;
+    types: CardType[];
     name: string;
     description: string;
     image?: string;
@@ -33,6 +36,7 @@ export class Card {
     execute: Card['execute'];
   }) {
     this.id = id;
+    this.types = types;
     this.name = name;
     this.description = description;
     this.image = image || 'https://upload.wikimedia.org/wikipedia/commons/e/e0/PlaceholderLC.png';

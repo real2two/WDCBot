@@ -1,7 +1,9 @@
 import { Card } from '../../structures';
+import { CardType } from '../../types';
 
 export default new Card({
   id: 'powerup',
+  types: [CardType.Supportive],
   name: 'Powerup',
   description: 'Double your damage for the next turn only.',
   image: 'https://i.imgur.com/KoiBNIw.png',
