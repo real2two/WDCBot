@@ -18,6 +18,7 @@ export async function handleGameLoop({
   game: WDCGame;
 }) {
   // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
+  // TODO: Make sure to clear <WDCGamePlayer>.chosenCardIds after a round ends (or turn 1 starts)
 
   // TODO: Have an "automatic disband" system in place if messages stop being sent
 
