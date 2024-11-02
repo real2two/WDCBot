@@ -5,6 +5,7 @@ export interface WDCGame {
   state: WDCGameState;
   players: WDCPlayer[];
   loopTimer: Timer | null;
+  kv: Map<string, object>;
   turnsPerRound: number;
 }
 
@@ -18,7 +19,6 @@ export interface WDCPlayer {
   userId: string;
   health: number;
   cards: WDCCards[];
-  effects: WDCEffects[];
 }
 
 export type WDCCards = WDCCardBase;
@@ -26,13 +26,4 @@ export interface WDCCardBase {
   cardId: string;
   quantity: number;
   turnsUntilUsable: number; // 0 by default
-}
-
-export type WDCEffects = WDCEffectBase | WDCEffectPowerup;
-export interface WDCEffectPowerup {
-  effectId: 'powerup';
-  turnsLeft: number;
-}
-export interface WDCEffectBase {
-  effectId: string;
 }

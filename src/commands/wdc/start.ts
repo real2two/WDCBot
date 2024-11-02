@@ -37,6 +37,7 @@ export default new Subcommand({
       state: WDCGameState.Prep,
       players: [],
       loopTimer: null,
+      kv: new Map(),
       turnsPerRound: 4,
     };
 
@@ -44,7 +45,6 @@ export default new Subcommand({
       userId: user.id,
       health: 0,
       cards: [],
-      effects: [],
     });
 
     createWDCGame(game);
