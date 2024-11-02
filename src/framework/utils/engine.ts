@@ -36,9 +36,6 @@ export async function handleGameLoop({
   game.round++;
 
   // Create response
-
-  // TODO: For custom games, inventories should be private to the user only.
-
   const playersText: string[] = [];
   for (const player of game.players) {
     let text = `- <@${player.userId}> ❤️ ${player.health}`;
