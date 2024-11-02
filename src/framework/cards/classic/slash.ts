@@ -2,7 +2,7 @@ import { Card } from '../../structures';
 import { CardType } from '../../types';
 
 export default new Card({
-  id: 'slash',
+  id: 'classic:slash',
   types: [CardType.Offensive],
   name: 'Slash',
   description: 'Remove 1 heart from an opponent.',

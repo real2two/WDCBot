@@ -2,7 +2,7 @@ import { Card } from '../../structures';
 import { CardType } from '../../types';
 
 export default new Card({
-  id: 'blindshot',
+  id: 'classic:blindshot',
   types: [CardType.Offensive],
   name: 'Blindshot',
   description: 'Deal 2 hearts of damage to a random player, which can be yourself.',

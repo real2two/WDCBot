@@ -2,7 +2,7 @@ import { Card } from '../../structures';
 import { CardType } from '../../types';
 
 export default new Card({
-  id: 'reflect',
+  id: 'classic:reflect',
   types: [CardType.Defensive],
   name: 'Reflect',
   description: 'Reflect a move.',

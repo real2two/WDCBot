@@ -2,7 +2,7 @@ import { Card } from '../../structures';
 import { CardType } from '../../types';
 
 export default new Card({
-  id: 'heal',
+  id: 'classic:heal',
   types: [CardType.Defensive],
   name: 'Heal',
   description: 'Get 1 heart.',

@@ -54,14 +54,14 @@ export default new Component({
 
     // Setup the game (classic gamemode)
     const classicCards = [
-      'slash',
-      'shield',
-      'heal',
-      'laser',
-      'reflect',
-      'powerup',
-      'blindshot',
-      'alternator',
+      'classic:slash',
+      'classic:shield',
+      'classic:heal',
+      'classic:laser',
+      'classic:reflect',
+      'classic:powerup',
+      'classic:blindshot',
+      'classic:alternator',
     ];
     for (const player of game.players) {
       player.cards = [];

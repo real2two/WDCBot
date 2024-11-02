@@ -2,7 +2,7 @@ import { Card } from '../../structures';
 import { CardType } from '../../types';
 
 export default new Card({
-  id: 'alternator',
+  id: 'classic:alternator',
   types: [CardType.Supportive],
   name: 'Alternator',
   description:
