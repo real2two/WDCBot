@@ -36,30 +36,29 @@ export async function handleGameLoop({
   game.round++;
 
   // Create response
-  const playersText = game.players
-    .map(
-      (p) =>
-        `- <@${p.userId}> ❤️ ${p.health}` +
-        `${
-          game.publicInventory
-            ? ` ${p.cards
-                .filter((c) => c.quantity !== Number.POSITIVE_INFINITY)
-                .map(
-                  (pc) => `${cards.find((c) => pc.cardId === c.id)?.emoji || '❓'} ${pc.quantity}`,
-                )
-                .join(' ')}`
-            : ''
-        }`,
-    )
-    .join('\n');
-
   await sendInteractionResponse(interaction, {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
       embeds: [
         {
           color: 0x57f287,
-          description: `## Round ${game.round}\n\n${playersText}`,
+          description: `## Round ${game.round}\n\n${game.players
+            .map(
+              (p) =>
+                `- <@${p.userId}> ❤️ ${p.health}` +
+                `${
+                  game.publicInventory
+                    ? ` ${p.cards
+                        .filter((c) => c.quantity !== Number.POSITIVE_INFINITY)
+                        .map(
+                          (pc) =>
+                            `${cards.find((c) => pc.cardId === c.id)?.emoji || '❓'} ${pc.quantity}`,
+                        )
+                        .join(' ')}`
+                    : ''
+                }`,
+            )
+            .join('\n')}`,
           footer: {
             text: 'Click on the button below to select your cards within 1 minute!',
           },
