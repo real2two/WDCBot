@@ -9,6 +9,8 @@ export interface WDCGame {
   mode: 'classic';
   state: WDCGameState;
   publicInventory: boolean;
+  defaultHealth: number;
+  maxHealth: number;
   // Players
   players: WDCGamePlayer[];
   // Loop / Cards

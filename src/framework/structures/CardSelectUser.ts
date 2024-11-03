@@ -14,7 +14,7 @@ export class CardSelectUser extends Card {
         ctx: CardExecuteContext & {
           playerChosenCard: Omit<WDCGameChosenCard, 'data'> & { data: CardSelectUserData };
         },
-      ) => void | Promise<void>;
+      ) => unknown | Promise<unknown>;
     },
   ) {
     super(data as ConstructorParameters<typeof Card>[0]);

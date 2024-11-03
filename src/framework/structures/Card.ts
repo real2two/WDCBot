@@ -17,11 +17,11 @@ export class Card {
   suborder: number;
   turnCooldown: number;
   quantity: number;
-  execute: (ctx: CardExecuteContext) => void | Promise<void>;
-  beforeOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
-  afterOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
+  execute: (ctx: CardExecuteContext) => unknown | Promise<unknown>;
+  beforeOrder?: (ctx: CardBeforeAfterContext) => unknown | Promise<unknown>;
+  afterOrder?: (ctx: CardBeforeAfterContext) => unknown | Promise<unknown>;
   handleCustomName?: (ctx: CardHandleCustomNameContext) => string;
-  handleCustomInput?: (ctx: CardHandleCustomInputContext) => void;
+  handleCustomInput?: (ctx: CardHandleCustomInputContext) => unknown;
 
   constructor({
     id,

@@ -7,8 +7,8 @@ export default new Card({
   name: 'Laser',
   description: 'Remove 1 heart from every opponent, but be twice as vulnerable to attacks.',
   image: 'https://i.imgur.com/FHQ8Qma.png',
-  order: -1,
-  suborder: 0,
+  order: 0,
+  suborder: -1,
 
   execute({ respond }) {
     respond('test laser');

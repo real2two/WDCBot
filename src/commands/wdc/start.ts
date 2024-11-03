@@ -41,6 +41,8 @@ export default new Subcommand({
       mode: 'classic',
       state: WDCGameState.Prep,
       publicInventory: true,
+      defaultHealth: 7,
+      maxHealth: 10,
       players: [],
       round: 0,
       currentlyHandlingTurns: false,

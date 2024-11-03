@@ -206,6 +206,9 @@ export async function handleTurnLoop({
       for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
         // Handle suborder
         for (const { player, card } of chosenCardsForSuborder) {
+          // Ignore dead players
+          if (player.health <= 0) continue;
+
           // Execute card
           await card.execute({
             ...partialContext,

@@ -64,7 +64,7 @@ export default new Component({
       'classic:alternator',
     ];
     for (const player of game.players) {
-      player.health = 7;
+      player.health = game.defaultHealth;
 
       player.cards = [];
       for (const cardId of classicCards) {
