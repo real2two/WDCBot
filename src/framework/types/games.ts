@@ -27,6 +27,7 @@ export enum WDCGameState {
 export interface WDCGamePlayer {
   userId: string;
   health: number;
+  diedAt?: { round: number; turn: number; order: number };
   cards: WDCGamePlayerCard[];
   submittedChosenCards: boolean;
   chosenCardIds: [string | null, string | null, string | null, string | null];

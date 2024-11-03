@@ -5,9 +5,26 @@ export function getCard(cardId: string) {
   return cards.find(({ id }) => id === cardId);
 }
 
-export function convertPlayersToText(game: WDCGame) {
+export function convertPlayersToText(
+  game: WDCGame,
+  opt?: { round: number; turn: number; order: number },
+) {
+  const isEveryoneDead = !game.players.some((p) => p.health > 0);
   return game.players
-    .sort((a, b) => b.health - a.health)
+    .sort((a, b) => {
+      // Compare round, turn and order
+      if (a.diedAt && b.diedAt) {
+        if (a.diedAt.round !== b.diedAt.round) return b.diedAt.round - a.diedAt.round;
+        if (a.diedAt.turn !== b.diedAt.turn) return b.diedAt.turn - a.diedAt.turn;
+        if (a.diedAt.order !== b.diedAt.order) return b.diedAt.order - a.diedAt.order;
+        return b.health - a.health;
+      }
+      // The one without diedAt comes first
+      if (a.diedAt) return 1;
+      if (b.diedAt) return -1;
+      // Compare health
+      return b.health - a.health;
+    })
     .map((p) =>
       p.health > 0
         ? `- <@${p.userId}> ❤️ ${p.health}` +
@@ -22,7 +39,12 @@ export function convertPlayersToText(game: WDCGame) {
                   .join(' ')}`
               : ''
           }`
-        : `- <@${p.userId}> 💀`,
+        : isEveryoneDead &&
+            opt?.round === p.diedAt?.round &&
+            opt?.turn === p.diedAt?.turn &&
+            opt?.order === p.diedAt?.order
+          ? `- <@${p.userId}> ❤️‍🔥 ${p.health}`
+          : `- <@${p.userId}> 💀`,
     )
     .join('\n');
 }

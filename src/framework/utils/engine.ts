@@ -2,6 +2,7 @@ import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { sendChannelMessage } from '../../utils';
 import { deleteWDCGame } from './games';
 import { convertPlayersToText } from './cards';
+import { convertNamesArrayToText } from './text';
 import type { WDCGame } from '../types';
 
 export async function handleRoundLoop({
@@ -117,23 +118,18 @@ export async function handleTurnLoop({
           player.chosenCardIds = [null, null, null, null];
         }
         // Send AFK kill message
-        const afkPlayerMentions = afkPlayers.map((p) => `<@${p.userId}>`);
-        if (afkPlayers.length === 1) {
-          afkPlayerMentions[0];
-        } else {
-          `${afkPlayerMentions.slice(0, -1).join(', ')} and ${afkPlayerMentions.slice(-1)}`;
-        }
-
         await sendChannelMessage(channelId, {
           embeds: [
             {
               color: 0xeb459e,
-              description: `💥 ${afkPlayerMentions} ${afkPlayerMentions.length === 1 ? 'has' : 'have'} exploded for being AFK.`,
+              description: `💥 ${convertNamesArrayToText(afkPlayers.map((p) => `<@${p.userId}>`))} ${afkPlayers.length === 1 ? 'has' : 'have'} exploded for being AFK.`,
             },
           ],
         });
       }
     }
+
+    if (handleTurnStatusCheck({ channelId, game, turn, order: 0 })) return;
 
     // Handle turn actions here
 
@@ -151,4 +147,78 @@ export async function handleTurnLoop({
 
   // Start next round
   return handleRoundLoop({ channelId, game });
+}
+
+function handleTurnStatusCheck({
+  channelId,
+  game,
+  turn,
+  order,
+}: {
+  channelId: string;
+  game: WDCGame;
+  turn: number;
+  order: number;
+}): boolean {
+  // Get amount of players that are still alive and declare "diedAt" if a player died.
+  let alive = 0;
+  for (const player of game.players) {
+    if (player.health <= 0) {
+      if (player.diedAt) continue;
+      player.diedAt = { round: game.round, turn, order };
+    } else {
+      alive++;
+    }
+  }
+
+  // If people are still alive or there isn't a winner:
+  if (alive > 1) {
+    // If anyone has negative health set it to 0
+    for (const player of game.players) {
+      player.health = 0;
+    }
+    // Return false if the game didn't end
+    return false;
+  }
+
+  // Get winners
+  const players = game.players
+    .filter((p) => !p.diedAt || (p.diedAt.round === game.round && p.diedAt.turn === turn))
+    .sort((a, b) => b.health - a.health);
+  const winners = players.filter((p) => players[0].health === p.health);
+
+  const endOfTurnEmbed = {
+    color: 0xfee75c,
+    description: `### Status - End of turn ${turn}\n\n${convertPlayersToText(game, { round: game.round, turn, order })}`,
+  };
+
+  if (winners.length === 1) {
+    // Send winner message (1 winner)
+    sendChannelMessage(channelId, {
+      embeds: [
+        endOfTurnEmbed,
+        {
+          color: 0x57f287,
+          description: `# 🎉 <@${winners[0].userId}> has won the match!`,
+        },
+      ],
+    });
+  } else {
+    // Send tied message
+    sendChannelMessage(channelId, {
+      embeds: [
+        endOfTurnEmbed,
+        {
+          color: 0x57f287,
+          description: `# 🎉 ${convertNamesArrayToText(winners.map((p) => `<@${p.userId}>`))} have tied in the match!`,
+        },
+      ],
+    });
+  }
+
+  // Delete the game
+  deleteWDCGame(channelId);
+
+  // Return true if the game ends
+  return true;
 }
