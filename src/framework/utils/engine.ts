@@ -1,8 +1,8 @@
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { sendChannelMessage } from '../../utils';
 import { deleteWDCGame } from './games';
-import { convertPlayersToText } from './cards';
-import { convertNamesArrayToText } from './text';
+import { convertPlayersToText, getCard } from './cards';
+import { convertNamesArrayToText, sortGroupByOrder } from './utils';
 import type { WDCGame } from '../types';
 import { wait, waitRandom } from './timers';
 
@@ -108,9 +108,8 @@ export async function handleTurnLoop({
     });
     if (status !== 200) return deleteWDCGame(channelId);
 
-    await waitRandom(2000, 5000);
-
     // Handle kicking AFK users (turn 1 only)
+    await waitRandom(2000, 5000);
     if (turn === 1) {
       const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
       if (afkPlayers.length) {
@@ -134,17 +133,34 @@ export async function handleTurnLoop({
     }
 
     await waitRandom(1000, 2000);
-
     if (handleTurnStatusCheck({ channelId, game, turn, order: 0 })) return;
 
-    // Handle turn actions here
+    // Loop through orders here
+    const chosenCardSortedByOrderForTurn = sortGroupByOrder(
+      game.players
+        .filter((p) => p.submittedChosenCards)
+        .map((p) => ({ player: p, card: getCard(p.chosenCardIds[turn - 1]!)! })),
+      ({ card }) => card.order,
+    );
 
-    // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
-    // TODO: Make sure to disband the game if there's ever a send channel message error
+    for (const [order, chosenCardsForOrder] of chosenCardSortedByOrderForTurn) {
+      // Handle suborders
+      const chosenCardSortedBySuborderForOrder = sortGroupByOrder(
+        chosenCardsForOrder,
+        ({ card }) => card.suborder,
+      );
 
-    // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
-    //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
-    //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+      for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
+        // console.log(turn, order, suborder, chosenCardsForSuborder);
+        
+        // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
+        // TODO: Make sure to disband the game if there's ever a send channel message error
+        //
+        // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
+        //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
+        //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+      }
+    }
 
     await wait(10000);
   }
@@ -178,7 +194,7 @@ function handleTurnStatusCheck({
   // If people are still alive or there isn't a winner:
   if (alive > 1) {
     // If anyone has negative health set it to 0
-    for (const player of game.players) {
+    for (const player of game.players.filter((p) => p.health < 0)) {
       player.health = 0;
     }
     // Return false if the game didn't end
