@@ -1,9 +1,9 @@
-import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
+import { type APIEmbed, ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { sendChannelMessage } from '../../utils';
 import { deleteWDCGame } from './games';
 import { convertPlayersToText, getCard } from './cards';
 import { convertNamesArrayToText, sortGroupByOrder } from './utils';
-import type { WDCGame } from '../types';
+import { CardStep, type WDCGame } from '../types';
 import { wait, waitRandom } from './timers';
 
 export async function handleRoundLoop({
@@ -24,7 +24,7 @@ export async function handleRoundLoop({
 
   // Clear cards selected from game
   for (const player of game.players) {
-    player.chosenCardIds = [null, null, null, null];
+    player.chosenCards = [null, null, null, null];
   }
 
   // Create response
@@ -117,7 +117,7 @@ export async function handleTurnLoop({
           // Kill AFK player
           player.health = 0;
           // If you never submitted, you never chose any cards
-          player.chosenCardIds = [null, null, null, null];
+          player.chosenCards = [null, null, null, null];
         }
         // Send AFK kill message
         const { status } = await sendChannelMessage(channelId, {
@@ -133,13 +133,13 @@ export async function handleTurnLoop({
     }
 
     await waitRandom(1000, 2000);
-    if (handleTurnStatusCheck({ channelId, game, turn, order: 0 })) return;
+    if (handleTurnStatusCheck({ channelId, game, turn, order: 0, step: CardStep.Normal })) return;
 
     // Loop through orders here
     const chosenCardSortedByOrderForTurn = sortGroupByOrder(
       game.players
         .filter((p) => p.submittedChosenCards)
-        .map((p) => ({ player: p, card: getCard(p.chosenCardIds[turn - 1]!)! })),
+        .map((p) => ({ player: p, card: getCard(p.chosenCards[turn - 1]!.cardId)! })),
       ({ card }) => card.order,
     );
 
@@ -150,16 +150,39 @@ export async function handleTurnLoop({
         ({ card }) => card.suborder,
       );
 
+      // TODO: Handle beforeOrder here
+
+      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.BeforeOrder }))
+        return;
+
       for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
-        // console.log(turn, order, suborder, chosenCardsForSuborder);
-        
-        // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
-        // TODO: Make sure to disband the game if there's ever a send channel message error
-        //
-        // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
-        //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
-        //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+        // Handle suborder
+        for (const { player, card } of chosenCardsForSuborder) {
+          // TODO: Add a way to select a user to attack/heal for some cards (such as slash, heal and alternator)
+
+          await card.execute({
+            game,
+            player,
+            round: game.round,
+            turn,
+            order,
+            suborder,
+            step: CardStep.Normal,
+            respond,
+          });
+
+          // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
+          //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
+          //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+        }
       }
+
+      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.Normal })) return;
+
+      // TODO: Handle afterOrder here
+
+      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.AfterOrder }))
+        return;
     }
 
     await wait(10000);
@@ -167,6 +190,20 @@ export async function handleTurnLoop({
 
   // Start next round
   return handleRoundLoop({ channelId, game });
+
+  async function respond(message: string | APIEmbed[]) {
+    return sendChannelMessage(channelId, {
+      embeds:
+        typeof message === 'string'
+          ? [
+              {
+                color: 0xeb459e,
+                description: message,
+              },
+            ]
+          : message,
+    });
+  }
 }
 
 function handleTurnStatusCheck({
@@ -174,18 +211,20 @@ function handleTurnStatusCheck({
   game,
   turn,
   order,
+  step,
 }: {
   channelId: string;
   game: WDCGame;
   turn: number;
   order: number;
+  step: CardStep;
 }): boolean {
   // Get amount of players that are still alive and declare "diedAt" if a player died.
   let alive = 0;
   for (const player of game.players) {
     if (player.health <= 0) {
       if (player.diedAt) continue;
-      player.diedAt = { round: game.round, turn, order };
+      player.diedAt = { round: game.round, turn, order, step };
     } else {
       alive++;
     }
@@ -203,13 +242,17 @@ function handleTurnStatusCheck({
 
   // Get winners
   const players = game.players
-    .filter((p) => !p.diedAt || (p.diedAt.round === game.round && p.diedAt.turn === turn))
+    .filter(
+      (p) =>
+        !p.diedAt ||
+        (p.diedAt.round === game.round && p.diedAt.turn === turn && p.diedAt.step === step),
+    )
     .sort((a, b) => b.health - a.health);
   const winners = players.filter((p) => players[0].health === p.health);
 
   const endOfTurnEmbed = {
     color: 0xfee75c,
-    description: `### Status - End of turn ${turn}\n\n${convertPlayersToText(game, { round: game.round, turn, order })}`,
+    description: `### Status - End of turn ${turn}\n\n${convertPlayersToText(game, { round: game.round, turn, order, step })}`,
   };
 
   if (winners.length === 1) {

@@ -54,7 +54,7 @@ export default new Subcommand({
       health: 0,
       cards: [],
       submittedChosenCards: false,
-      chosenCardIds: [null, null, null, null],
+      chosenCards: [null, null, null, null],
     });
 
     createWDCGame(game);

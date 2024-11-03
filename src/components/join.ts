@@ -50,7 +50,7 @@ export default new Component({
         health: 0,
         cards: [],
         submittedChosenCards: false,
-        chosenCardIds: [null, null, null, null],
+        chosenCards: [null, null, null, null],
       });
     }
 

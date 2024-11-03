@@ -85,7 +85,7 @@ function createSelectCardComponentOptions(player: WDCGamePlayer, cardIndex: numb
       label: card.name,
       description: card.description,
       value: card.id,
-      default: card.id === player.chosenCardIds[cardIndex],
+      default: card.id === player.chosenCards[cardIndex]?.cardId,
     });
   }
   return options;

@@ -61,7 +61,7 @@ export default new Component({
       });
     }
 
-    if (player.chosenCardIds.some((c) => !c)) {
+    if (player.chosenCards.some((c) => !c)) {
       return createSelectCardMessage(
         player,
         respond,

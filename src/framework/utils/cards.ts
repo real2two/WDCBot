@@ -7,7 +7,7 @@ export function getCard(cardId: string) {
 
 export function convertPlayersToText(
   game: WDCGame,
-  opt?: { round: number; turn: number; order: number },
+  opt?: { round: number; turn: number; order: number; step: number },
 ) {
   const isEveryoneDead = !game.players.some((p) => p.health > 0);
   return game.players
@@ -17,6 +17,7 @@ export function convertPlayersToText(
         if (a.diedAt.round !== b.diedAt.round) return b.diedAt.round - a.diedAt.round;
         if (a.diedAt.turn !== b.diedAt.turn) return b.diedAt.turn - a.diedAt.turn;
         if (a.diedAt.order !== b.diedAt.order) return b.diedAt.order - a.diedAt.order;
+        if (a.diedAt.step !== b.diedAt.step) return b.diedAt.step - a.diedAt.step;
         return b.health - a.health;
       }
       // The one without diedAt comes first
@@ -42,7 +43,8 @@ export function convertPlayersToText(
         : isEveryoneDead &&
             opt?.round === p.diedAt?.round &&
             opt?.turn === p.diedAt?.turn &&
-            opt?.order === p.diedAt?.order
+            opt?.order === p.diedAt?.order &&
+            opt?.step === p.diedAt?.step
           ? `- <@${p.userId}> ❤️‍🔥 ${p.health}`
           : `- <@${p.userId}> 💀`,
     )

@@ -1,4 +1,5 @@
 import type { Card } from '../structures';
+import type { CardStep } from './cards';
 
 export interface WDCGame {
   // Identification
@@ -27,13 +28,28 @@ export enum WDCGameState {
 export interface WDCGamePlayer {
   userId: string;
   health: number;
-  diedAt?: { round: number; turn: number; order: number };
+  diedAt?: {
+    round: number;
+    turn: number;
+    order: number;
+    step: CardStep;
+  };
   cards: WDCGamePlayerCard[];
   submittedChosenCards: boolean;
-  chosenCardIds: [string | null, string | null, string | null, string | null];
+  chosenCards: [
+    WDCGameChosenCard | null,
+    WDCGameChosenCard | null,
+    WDCGameChosenCard | null,
+    WDCGameChosenCard | null,
+  ];
 }
 
 export type WDCGamePlayerCard = {
   cardId: string;
   quantity: number;
 };
+
+export interface WDCGameChosenCard {
+  cardId: string;
+  targettedUserId?: string;
+}

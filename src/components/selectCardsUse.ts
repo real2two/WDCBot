@@ -62,8 +62,8 @@ export default new Component({
     }
 
     // Get the card index, and card ID
-    const cardIndex = interaction.data?.custom_id.split(':')?.[3] ?? 0;
-    const cardId = interaction.data?.values?.[0] ?? null;
+    const cardIndex = Number(interaction.data?.custom_id.split(':')?.[3] ?? '0');
+    const cardId = (interaction.data?.values?.[0] as string) ?? null;
 
     // Get card information
     const card = getCard(cardId);
@@ -95,14 +95,14 @@ export default new Component({
     }
 
     // Check how many times the user is trying to use a card this turn AND the turn cooldown
-    const mockChosenCardIds = [...player.chosenCardIds];
-    mockChosenCardIds[cardIndex] = cardId;
+    const mockchosenCards = [...player.chosenCards];
+    mockchosenCards[cardIndex] = { cardId };
 
     let afterRoundQuantity = playerCard.quantity;
     let checkTurnCooldown = 0;
 
-    for (const chosenCardId of mockChosenCardIds) {
-      if (cardId !== chosenCardId) {
+    for (const chosenCardId of mockchosenCards) {
+      if (cardId !== chosenCardId?.cardId) {
         if (checkTurnCooldown) checkTurnCooldown--;
         continue;
       }
@@ -128,7 +128,7 @@ export default new Component({
     }
 
     // Set the card
-    player.chosenCardIds[cardIndex] = cardId;
+    player.chosenCards[cardIndex] = { cardId };
 
     // Respond to interaction
     return createSelectCardMessage(player, respond);
