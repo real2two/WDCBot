@@ -4,7 +4,7 @@ import { cards, convertNamesArrayToText, getCard } from '../../framework';
 
 export default new Subcommand({
   data: {
-    name: 'card',
+    name: 'get_card',
     description: "Get a card's information",
     options: [
       {
