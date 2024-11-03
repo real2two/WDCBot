@@ -1,6 +1,7 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { getPlayer, getWDCGame, WDCGameState } from '../framework';
+import { createSelectCardMessage } from '../utils';
 
 export default new Component({
   customId: /^g:select_cards:confirm$/,
@@ -50,12 +51,21 @@ export default new Component({
       });
     }
 
-    respond({
-      type: InteractionResponseType.UpdateMessage,
-      data: {
-        content: 'lol',
-        flags: MessageFlags.Ephemeral,
-      },
-    });
+    if (player.chosenCardIds.some((c) => !c)) {
+      return createSelectCardMessage(
+        player,
+        respond,
+        '❌ You must first finish selecting all cards before you submit!',
+      );
+    }
+
+    player.submittedChosenCards = true;
+
+    return createSelectCardMessage(
+      player,
+      respond,
+      // TODO: Handle starting the game if everyone submitted!
+      '✅ Submitted! You can still make changes until the game begins.',
+    );
   },
 });

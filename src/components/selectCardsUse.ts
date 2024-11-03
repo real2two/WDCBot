@@ -1,7 +1,7 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { getCard, getPlayer, getWDCGame, WDCGameState } from '../framework';
-import { createSelectCardComponents } from 'src/utils';
+import { createSelectCardMessage } from '../utils';
 
 export default new Component({
   customId: /^g:select_cards:use:[0-3]$/,
@@ -81,7 +81,7 @@ export default new Component({
 
     // Check if user can use this card anymore
     if (!playerCard.quantity) {
-      return sendResponse(`❌ You ran out of **${card.name}**.`);
+      return createSelectCardMessage(player, respond, `❌ You ran out of **${card.name}**.`);
     }
 
     // Check how many times the user is trying to use a card this turn AND the turn cooldown
@@ -98,11 +98,17 @@ export default new Component({
       }
 
       if (checkTurnCooldown) {
-        return sendResponse(`❌ This card has a turn cooldown of **${card.turnCooldown}**.`);
+        return createSelectCardMessage(
+          player,
+          respond,
+          `❌ This card has a turn cooldown of **${card.turnCooldown}**.`,
+        );
       }
 
       if (afterRoundQuantity <= 0) {
-        return sendResponse(
+        return createSelectCardMessage(
+          player,
+          respond,
           `❌ You can only use this card **${playerCard.quantity}** more times in total.`,
         );
       }
@@ -115,16 +121,6 @@ export default new Component({
     player.chosenCardIds[cardIndex] = cardId;
 
     // Respond to interaction
-    return sendResponse();
-
-    function sendResponse(additionalMessage = '') {
-      return respond({
-        type: InteractionResponseType.UpdateMessage,
-        data: {
-          content: `### Select your cards${additionalMessage ? `\n> ${additionalMessage}` : ''}`,
-          components: createSelectCardComponents(player!),
-        },
-      });
-    }
+    return createSelectCardMessage(player, respond);
   },
 });

@@ -1,11 +1,14 @@
 import {
   ButtonStyle,
   ComponentType,
+  InteractionResponseType,
+  MessageFlags,
   type APIActionRowComponent,
   type APIMessageActionRowComponent,
   type APISelectMenuOption,
 } from 'discord-api-types/v10';
 import { getCard, type WDCGame, type WDCGamePlayer } from '../framework';
+import type { CustomAPIInteractionResponse } from '@httpi/client';
 
 export function createPrepEmbeds(game: WDCGame) {
   return [
@@ -23,26 +26,39 @@ export function createPrepEmbeds(game: WDCGame) {
   ];
 }
 
-export function createSelectCardComponents(
+export function createSelectCardMessage(
   player: WDCGamePlayer,
-): APIActionRowComponent<APIMessageActionRowComponent>[] {
-  return [
-    createSelectCardComponent(player, 0),
-    createSelectCardComponent(player, 1),
-    createSelectCardComponent(player, 2),
-    createSelectCardComponent(player, 3),
-    {
-      type: ComponentType.ActionRow,
+  respond: (message: CustomAPIInteractionResponse) => unknown,
+  additionalMessage = '',
+  firstMessage = false,
+) {
+  return respond({
+    type: firstMessage
+      ? InteractionResponseType.ChannelMessageWithSource
+      : InteractionResponseType.UpdateMessage,
+    data: {
+      content: `### Select your cards${additionalMessage ? `\n> ${additionalMessage}` : ''}`,
       components: [
+        createSelectCardComponent(player, 0),
+        createSelectCardComponent(player, 1),
+        createSelectCardComponent(player, 2),
+        createSelectCardComponent(player, 3),
         {
-          type: ComponentType.Button,
-          style: ButtonStyle.Success,
-          custom_id: 'g:select_cards:confirm',
-          label: 'Submit',
+          type: ComponentType.ActionRow,
+          components: [
+            {
+              type: ComponentType.Button,
+              style: ButtonStyle.Success,
+              custom_id: 'g:select_cards:confirm',
+              label: player.submittedChosenCards ? 'Submitted!' : 'Submit',
+              disabled: player.submittedChosenCards,
+            },
+          ],
         },
       ],
+      flags: MessageFlags.Ephemeral,
     },
-  ];
+  });
 }
 
 function createSelectCardComponent(
