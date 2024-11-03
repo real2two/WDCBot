@@ -80,7 +80,7 @@ export default new Component({
       return createSelectCardMessage(
         player,
         respond,
-        '✅ Submitted! You can still make changes until the game begins.',
+        '✅ Submitted! You can still make changes until the round begins.',
       );
     }
 
