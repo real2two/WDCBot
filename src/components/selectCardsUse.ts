@@ -84,10 +84,22 @@ export default new Component({
       return sendResponse(`❌ You ran out of **${card.name}**.`);
     }
 
-    // Check how many times the user is trying to use a card this turn
-    let afterRoundQuantity = playerCard.quantity - 1;
-    for (const chosenCardId of player.chosenCardIds) {
-      if (cardId !== chosenCardId) continue;
+    // Check how many times the user is trying to use a card this turn AND the turn cooldown
+    const mockChosenCardIds = [...player.chosenCardIds];
+    mockChosenCardIds[cardIndex] = cardId;
+
+    let afterRoundQuantity = playerCard.quantity;
+    let checkTurnCooldown = 0;
+
+    for (const chosenCardId of mockChosenCardIds) {
+      if (cardId !== chosenCardId) {
+        if (checkTurnCooldown) checkTurnCooldown--;
+        continue;
+      }
+
+      if (checkTurnCooldown) {
+        return sendResponse(`❌ This card has a turn cooldown of **${card.turnCooldown}**.`);
+      }
 
       if (afterRoundQuantity <= 0) {
         return sendResponse(
@@ -95,10 +107,9 @@ export default new Component({
         );
       }
 
+      checkTurnCooldown = card.turnCooldown;
       afterRoundQuantity--;
     }
-
-    // TODO: Check for turn cooldown
 
     // Set the card
     player.chosenCardIds[cardIndex] = cardId;

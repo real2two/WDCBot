@@ -35,5 +35,4 @@ export interface WDCGamePlayer {
 export type WDCGamePlayerCard = {
   cardId: string;
   quantity: number;
-  turnsUntilUsable: number; // 0 by default
 };

@@ -72,7 +72,6 @@ export default new Component({
         player.cards.push({
           cardId: card.id,
           quantity: card.quantity,
-          turnsUntilUsable: 0,
         });
       }
     }
