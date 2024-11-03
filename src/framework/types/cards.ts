@@ -1,6 +1,6 @@
 import type { APIEmbed } from 'discord-api-types/v10';
 import type { InteractionRequestData } from '@httpi/client';
-import type { WDCGame, WDCGamePlayer, WDCGamePlayerCard } from './games';
+import type { WDCGame, WDCGameChosenCard, WDCGamePlayer, WDCGamePlayerCard } from './games';
 import type { Card } from '../structures';
 
 export enum CardType {
@@ -17,6 +17,9 @@ export enum CardStep {
 
 export interface CardExecuteContext extends CardBeforeAfterContext {
   player: WDCGamePlayer;
+  card: Card;
+  playerCard: WDCGamePlayerCard;
+  playerChosenCard: WDCGameChosenCard;
 }
 
 export interface CardBeforeAfterContext extends CardGameContext {

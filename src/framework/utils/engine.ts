@@ -165,8 +165,16 @@ export async function handleTurnLoop({
       for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
         // Handle suborder
         for (const { player, card } of chosenCardsForSuborder) {
-          // TODO: Add a way to select a user to attack/heal for some cards (such as slash, heal and alternator)
-          await card.execute({ ...partialContext, player, suborder, step: CardStep.Normal });
+          // Execute card
+          await card.execute({
+            ...partialContext,
+            player,
+            card,
+            playerCard: player.cards.find((c) => c.cardId === card.id)!,
+            playerChosenCard: player.chosenCards.find((c) => c?.cardId === card.id)!,
+            suborder,
+            step: CardStep.Normal,
+          });
 
           if (
             (card.beforeOrder || card.afterOrder) &&

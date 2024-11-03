@@ -18,7 +18,6 @@ export class CardSelectUser extends Card {
         user?: APIUser;
         member?: APIGuildMember;
       };
-      console.log(data.member);
       return `${card.name} ${data.member?.nick || data.user?.global_name || data.user?.username || data.id}`;
     };
   }
