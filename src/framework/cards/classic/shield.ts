@@ -9,10 +9,10 @@ export default new Card({
   image: 'https://i.imgur.com/rSLPXps.png',
   emoji: '🛡️',
   order: 0,
-  suborder: 0,
+  suborder: -1,
   quantity: 6,
 
-  execute({ respond }) {
-    respond('test shield');
+  execute({ player, respond }) {
+    return respond(`<@${player.userId}> actived a shield!`);
   },
 });

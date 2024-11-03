@@ -12,8 +12,7 @@ export default new Card({
   suborder: -2,
   quantity: 1,
 
-  execute({ game, player, round, turn, step, respond }) {
-    game.kv.set(`classic:powerup:${player.userId}`, { round, turn, step });
-    return respond(`<@${player.userId}> actived a power up! `);
+  execute({ player, respond }) {
+    return respond(`<@${player.userId}> actived a power up!`);
   },
 });

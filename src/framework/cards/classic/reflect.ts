@@ -9,10 +9,10 @@ export default new Card({
   image: 'https://i.imgur.com/qMGAGz0.png',
   emoji: '🪞',
   order: 0,
-  suborder: 0,
+  suborder: -2,
   quantity: 3,
 
-  execute({ respond }) {
-    respond('test reflect');
+  execute({ player, respond }) {
+    return respond(`<@${player.userId}> actived a reflect!`);
   },
 });

@@ -1,6 +1,6 @@
 import { CardSelectUser } from '../../structures';
 import { getPlayer } from '../../utils';
-import { CardType, type CardStep } from '../../types';
+import { CardType } from '../../types';
 
 export default new CardSelectUser({
   id: 'classic:slash',
@@ -11,11 +11,11 @@ export default new CardSelectUser({
   order: 0,
   suborder: 0,
 
-  execute({ game, player, playerChosenCard, round, turn, step, order, suborder, respond }) {
+  execute({ game, player, playerChosenCard, round, turn, step, respond }) {
     const targettedPlayer = getPlayer(game, playerChosenCard.data.id)!;
 
     if (targettedPlayer.diedAt) {
-      // Player is already dead
+      // Opponent is already dead
       return respond(`<@${player.userId}> slashed <@${targettedPlayer.userId}>'s dead body.`);
     }
 
@@ -29,33 +29,20 @@ export default new CardSelectUser({
     }
 
     // Check if player activated a power up
-    const activedPowerup = game.kv.get(`classic:powerup:${player.userId}`) as
-      | {
-          round: number;
-          turn: number;
-          step: CardStep;
-        }
-      | undefined;
-
-    const healthLost =
-      activedPowerup?.round === round &&
-      activedPowerup.turn + 1 === turn &&
-      activedPowerup.step === step
-        ? 2
-        : 1;
+    const hpLost = player.chosenCards[turn - 1]?.cardId === 'classic:powerup' ? 2 : 1;
 
     if (targettedCardForTurn.cardId === 'classic:reflect') {
-      // Handle if opponent has a shield
-      player.health -= healthLost;
+      // Handle if opponent has a reflect
+      player.health -= hpLost;
       return respond(
-        `<@${player.userId}> slashed <@${targettedPlayer.userId}> but the attack was reflected, making <@${player.userId}> lose **❤️ ${healthLost}**!`,
+        `<@${player.userId}> slashed <@${targettedPlayer.userId}> but the attack was reflected, making <@${player.userId}> lose **❤️ ${hpLost}**!`,
       );
     }
 
     // Handle slash attack
-    targettedPlayer.health -= healthLost;
+    targettedPlayer.health -= hpLost * (targettedCardForTurn.cardId === 'classic:laser' ? 2 : 1);
     return respond(
-      `<@${player.userId}> slashed <@${targettedPlayer.userId}> and lost **❤️ ${healthLost}**!`,
+      `<@${player.userId}> slashed <@${targettedPlayer.userId}> and lost **❤️ ${hpLost}**!`,
     );
   },
 });
