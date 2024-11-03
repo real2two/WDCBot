@@ -4,6 +4,7 @@ import { deleteWDCGame } from './games';
 import { convertPlayersToText } from './cards';
 import { convertNamesArrayToText } from './text';
 import type { WDCGame } from '../types';
+import { wait, waitRandom } from './timers';
 
 export async function handleRoundLoop({
   channelId,
@@ -107,6 +108,8 @@ export async function handleTurnLoop({
     });
     if (status !== 200) return deleteWDCGame(channelId);
 
+    await waitRandom(2000, 5000);
+
     // Handle kicking AFK users (turn 1 only)
     if (turn === 1) {
       const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
@@ -118,7 +121,7 @@ export async function handleTurnLoop({
           player.chosenCardIds = [null, null, null, null];
         }
         // Send AFK kill message
-        await sendChannelMessage(channelId, {
+        const { status } = await sendChannelMessage(channelId, {
           embeds: [
             {
               color: 0xeb459e,
@@ -126,8 +129,11 @@ export async function handleTurnLoop({
             },
           ],
         });
+        if (status !== 200) return deleteWDCGame(channelId);
       }
     }
+
+    await waitRandom(1000, 2000);
 
     if (handleTurnStatusCheck({ channelId, game, turn, order: 0 })) return;
 
@@ -140,9 +146,7 @@ export async function handleTurnLoop({
     //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
     //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
 
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(true), 1000);
-    });
+    await wait(10000);
   }
 
   // Start next round
