@@ -129,11 +129,22 @@ export async function handleTurnLoop({
           ],
         });
         if (status !== 200) return deleteWDCGame(channelId);
+
+        // Check for win/tie condition after AFK kills
+        await waitRandom(1000, 2000);
+        if (
+          await handleTurnStatusCheck({
+            channelId,
+            game,
+            turn,
+            order: 0,
+            step: CardStep.Normal,
+            skipDeathMessages: true,
+          })
+        )
+          return;
       }
     }
-
-    await waitRandom(1000, 2000);
-    if (handleTurnStatusCheck({ channelId, game, turn, order: 0, step: CardStep.Normal })) return;
 
     // Loop through orders here
     const chosenCardSortedByOrderForTurn = sortGroupByOrder(
@@ -151,15 +162,45 @@ export async function handleTurnLoop({
       );
 
       // Partial execute context
-      const partialContext = { game, round: game.round, turn, order, respond };
+      let failedToRespond = false;
+      const partialContext = {
+        game,
+        round: game.round,
+        turn,
+        order,
+        respond: async (message: string | APIEmbed[]) => {
+          if (failedToRespond) return null;
+
+          const res = await sendChannelMessage(channelId, {
+            embeds:
+              typeof message === 'string'
+                ? [
+                    {
+                      color: 0xeb459e,
+                      description: message,
+                    },
+                  ]
+                : message,
+          });
+
+          if (res.status !== 200) {
+            failedToRespond = true;
+            deleteWDCGame(channelId);
+          }
+
+          return res;
+        },
+      };
 
       // Handle beforeOrder here
       for (const card of game.usedCardsWithBeforeAfterFunctions) {
         await card.beforeOrder?.({ ...partialContext, suborder: 0, step: CardStep.BeforeOrder });
+        if (failedToRespond) return;
+
         await waitRandom(2000, 5000);
       }
 
-      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.BeforeOrder }))
+      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.BeforeOrder }))
         return;
 
       for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
@@ -176,6 +217,9 @@ export async function handleTurnLoop({
             step: CardStep.Normal,
           });
 
+          if (failedToRespond) return;
+
+          // Add cards to set if they have the beforeOrder/afterOrder function(s)
           if (
             (card.beforeOrder || card.afterOrder) &&
             !game.usedCardsWithBeforeAfterFunctions.has(card)
@@ -187,15 +231,18 @@ export async function handleTurnLoop({
         }
       }
 
-      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.Normal })) return;
+      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.Normal }))
+        return;
 
       // Handle afterOrder here
       for (const card of game.usedCardsWithBeforeAfterFunctions) {
         await card.afterOrder?.({ ...partialContext, suborder: 0, step: CardStep.AfterOrder });
+        if (failedToRespond) return;
+
         await waitRandom(2000, 5000);
       }
 
-      if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.AfterOrder }))
+      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.AfterOrder }))
         return;
     }
 
@@ -204,35 +251,23 @@ export async function handleTurnLoop({
 
   // Start next round
   return handleRoundLoop({ channelId, game });
-
-  async function respond(message: string | APIEmbed[]) {
-    return sendChannelMessage(channelId, {
-      embeds:
-        typeof message === 'string'
-          ? [
-              {
-                color: 0xeb459e,
-                description: message,
-              },
-            ]
-          : message,
-    });
-  }
 }
 
-function handleTurnStatusCheck({
+async function handleTurnStatusCheck({
   channelId,
   game,
   turn,
   order,
   step,
+  skipDeathMessages,
 }: {
   channelId: string;
   game: WDCGame;
   turn: number;
   order: number;
   step: CardStep;
-}): boolean {
+  skipDeathMessages?: boolean;
+}): Promise<boolean> {
   // Get amount of players that are still alive and declare "diedAt" if a player died.
   let alive = 0;
   for (const player of game.players) {
@@ -250,6 +285,34 @@ function handleTurnStatusCheck({
     for (const player of game.players.filter((p) => p.health < 0)) {
       player.health = 0;
     }
+
+    if (!skipDeathMessages) {
+      const playersWhoDiedThisRound = game.players
+        .filter(
+          (p) =>
+            p.diedAt?.round === game.round && p.diedAt?.turn === turn && p.diedAt?.step === step,
+        )
+        .sort((a, b) => b.health - a.health);
+
+      if (playersWhoDiedThisRound.length) {
+        const { status } = await sendChannelMessage(channelId, {
+          embeds: [
+            {
+              color: 0xed4245,
+              description: `☠️ ${convertNamesArrayToText(playersWhoDiedThisRound.map((p) => `<@${p.userId}>`))} ${playersWhoDiedThisRound.length === 1 ? 'has' : 'have'} died this round!`,
+            },
+          ],
+        });
+
+        if (status !== 200) {
+          deleteWDCGame(channelId);
+          return true;
+        }
+      }
+    }
+
+    await waitRandom(2000, 5000);
+
     // Return false if the game didn't end
     return false;
   }
