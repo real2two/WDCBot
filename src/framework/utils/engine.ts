@@ -1,7 +1,7 @@
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { sendChannelMessage } from '../../utils';
-import { cards } from '../cards';
 import { deleteWDCGame } from './games';
+import { convertPlayersToText } from './cards';
 import type { WDCGame } from '../types';
 
 export async function handleRoundLoop({
@@ -30,23 +30,7 @@ export async function handleRoundLoop({
     embeds: [
       {
         color: 0x57f287,
-        description: `## Round ${game.round}\n\n${game.players
-          .map(
-            (p) =>
-              `- <@${p.userId}> ❤️ ${p.health}` +
-              `${
-                game.publicInventory
-                  ? ` ${p.cards
-                      .filter((c) => c.quantity !== Number.POSITIVE_INFINITY)
-                      .map(
-                        (pc) =>
-                          `${cards.find((c) => pc.cardId === c.id)?.emoji || '❓'} ${pc.quantity}`,
-                      )
-                      .join(' ')}`
-                  : ''
-              }`,
-          )
-          .join('\n')}`,
+        description: `## Round ${game.round}\n\n${convertPlayersToText(game)}`,
         footer: {
           text: 'Click on the button below to select your cards within 1 minute!',
         },
@@ -110,33 +94,61 @@ export async function handleTurnLoop({
     clearTimeout(timer);
   }
 
-  // Handle kicking AFK users
-  const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
-  if (afkPlayers.length) {
-    for (const player of afkPlayers) {
-      player.health = 0;
-      player.chosenCardIds = [null, null, null, null];
+  for (let turn = 1; turn <= 4; turn++) {
+    // Handle turn message here
+    const { status } = await sendChannelMessage(channelId, {
+      embeds: [
+        {
+          color: 0xfee75c,
+          description: `### Status - Turn ${turn}\n\n${convertPlayersToText(game)}`,
+        },
+      ],
+    });
+    if (status !== 200) return deleteWDCGame(channelId);
+
+    // Handle kicking AFK users (turn 1 only)
+    if (turn === 1) {
+      const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
+      if (afkPlayers.length) {
+        for (const player of afkPlayers) {
+          // Kill AFK player
+          player.health = 0;
+          // If you never submitted, you never chose any cards
+          player.chosenCardIds = [null, null, null, null];
+        }
+        // Send AFK kill message
+        const afkPlayerMentions = afkPlayers.map((p) => `<@${p.userId}>`);
+        if (afkPlayers.length === 1) {
+          afkPlayerMentions[0];
+        } else {
+          `${afkPlayerMentions.slice(0, -1).join(', ')} and ${afkPlayerMentions.slice(-1)}`;
+        }
+
+        await sendChannelMessage(channelId, {
+          embeds: [
+            {
+              color: 0xeb459e,
+              description: `💥 ${afkPlayerMentions} ${afkPlayerMentions.length === 1 ? 'has' : 'have'} exploded for being AFK.`,
+            },
+          ],
+        });
+      }
     }
 
-    // TODO: Add messages for killing AFK users
-    // const afkPlayerMentions = afkPlayers.map((p) => `<@${p.userId}>`);
-    // if (afkPlayers.length === 1) {
-    //   afkPlayerMentions[0];
-    // } else {
-    //   `${afkPlayerMentions.slice(0, -1).join(', ')} and ${afkPlayerMentions.slice(-1)}`;
-    // }
+    // Handle turn actions here
+
+    // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
+    // TODO: Make sure to disband the game if there's ever a send channel message error
+
+    // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
+    //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
+    //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(true), 1000);
+    });
   }
 
-  // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
-
-  // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
-  //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
-  //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
-
-  const { status } = await sendChannelMessage(channelId, {
-    content: 'handle turn loop',
-  });
-  if (status !== 200) return deleteWDCGame(channelId);
-
-  // TODO: Make sure to disband the game if there's ever a send channel message error
+  // Start next round
+  return handleRoundLoop({ channelId, game });
 }
