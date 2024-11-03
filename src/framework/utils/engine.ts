@@ -129,9 +129,6 @@ export async function handleTurnLoop({
 
   // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
 
-  // TODO: Have an "automatic disband" system in place if messages stop being sent
-  // TODO: Have a button the host has to press to go to start the next round (to mitigate the 15 minute interaction limit issue)
-
   // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
   //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
   //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
