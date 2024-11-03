@@ -1,7 +1,7 @@
-import { Card } from '../../structures';
+import { CardSelectUser } from '../../structures';
 import { CardType } from '../../types';
 
-export default new Card({
+export default new CardSelectUser({
   id: 'classic:slash',
   types: [CardType.Offensive],
   name: 'Slash',

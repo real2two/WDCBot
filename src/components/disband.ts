@@ -9,7 +9,7 @@ import { deleteWDCGame, getWDCGame } from '../framework';
 import { hasManageGuild, sendInteractionResponse } from '../utils';
 
 export default new Component({
-  customId: /^g:disband:(start|confirm)$/,
+  customId: /^disband:(start|confirm)$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;
@@ -37,7 +37,7 @@ export default new Component({
     }
 
     const customId = interaction.data.custom_id as string;
-    const option = customId.slice('g:disband:'.length) as 'start' | 'confirm';
+    const option = customId.slice('disband:'.length) as 'start' | 'confirm';
 
     if (option === 'start') {
       return respond({
@@ -59,7 +59,7 @@ export default new Component({
                 {
                   type: ComponentType.Button,
                   style: ButtonStyle.Danger,
-                  custom_id: 'g:disband:confirm',
+                  custom_id: 'disband:confirm',
                   label: 'Disband',
                 },
                 {

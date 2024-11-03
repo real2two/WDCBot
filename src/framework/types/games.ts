@@ -51,5 +51,5 @@ export type WDCGamePlayerCard = {
 
 export interface WDCGameChosenCard {
   cardId: string;
-  targettedUserId?: string;
+  data?: null | boolean | number | string | object;
 }

@@ -71,19 +71,19 @@ export default new Subcommand({
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Primary,
-                custom_id: 'g:join',
+                custom_id: 'join',
                 label: 'Join',
               },
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Success,
-                custom_id: 'g:start',
+                custom_id: 'start',
                 label: 'Start',
               },
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Danger,
-                custom_id: 'g:disband:start',
+                custom_id: 'disband:start',
                 label: 'Disband',
               },
             ],

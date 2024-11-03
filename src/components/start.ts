@@ -3,7 +3,7 @@ import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { getCard, getWDCGame, handleRoundLoop, WDCGameState } from '../framework';
 
 export default new Component({
-  customId: /^g:start$/,
+  customId: /^start$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;

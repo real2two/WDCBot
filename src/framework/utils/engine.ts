@@ -45,7 +45,7 @@ export async function handleRoundLoop({
           {
             type: ComponentType.Button,
             style: ButtonStyle.Primary,
-            custom_id: 'g:select_cards',
+            custom_id: 'select_cards',
             label: 'Select your cards',
             emoji: {
               name: '🎴',

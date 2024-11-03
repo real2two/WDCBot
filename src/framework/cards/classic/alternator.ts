@@ -1,7 +1,7 @@
-import { Card } from '../../structures';
+import { CardSelectUser } from '../../structures';
 import { CardType } from '../../types';
 
-export default new Card({
+export default new CardSelectUser({
   id: 'classic:alternator',
   types: [CardType.Supportive],
   name: 'Alternator',

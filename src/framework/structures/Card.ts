@@ -1,4 +1,10 @@
-import type { CardBeforeAfterContext, CardExecuteContext, CardType, WDCGame } from '../types';
+import type {
+  CardBeforeAfterContext,
+  CardExecuteContext,
+  CardType,
+  CardHandleCustomInputContext,
+  CardHandleCustomNameContext,
+} from '../types';
 
 export class Card {
   id: string;
@@ -14,6 +20,8 @@ export class Card {
   execute: (ctx: CardExecuteContext) => void | Promise<void>;
   beforeOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
   afterOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
+  handleCustomName?: (ctx: CardHandleCustomNameContext) => string;
+  handleCustomInput?: (ctx: CardHandleCustomInputContext) => void;
 
   constructor({
     id,
@@ -29,6 +37,7 @@ export class Card {
     execute,
     beforeOrder,
     afterOrder,
+    handleCustomInput,
   }: {
     id: string;
     types: CardType[];
@@ -43,6 +52,7 @@ export class Card {
     execute: Card['execute'];
     beforeOrder?: Card['beforeOrder'];
     afterOrder?: Card['afterOrder'];
+    handleCustomInput?: Card['handleCustomInput'];
   }) {
     this.id = id;
     this.types = types;
@@ -57,6 +67,7 @@ export class Card {
     this.execute = execute;
     this.beforeOrder = beforeOrder;
     this.afterOrder = afterOrder;
+    this.handleCustomInput = handleCustomInput;
 
     if (this.id.length > 30 || this.name.length > 100 || this.description.length > 100)
       throw new Error(`Card id, name or description's length is too long: ${this.id}`);

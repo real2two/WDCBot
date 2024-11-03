@@ -4,7 +4,7 @@ import { getWDCGame, getPlayer, removePlayer, WDCGameState } from '../framework'
 import { createPrepEmbeds } from '../utils';
 
 export default new Component({
-  customId: /^g:join$/,
+  customId: /^join$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;

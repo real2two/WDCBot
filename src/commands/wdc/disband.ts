@@ -58,7 +58,7 @@ export default new Subcommand({
               {
                 type: ComponentType.Button,
                 style: ButtonStyle.Danger,
-                custom_id: 'g:disband:confirm',
+                custom_id: 'disband:confirm',
                 label: 'Disband',
               },
               {

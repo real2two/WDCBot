@@ -4,7 +4,7 @@ import { getPlayer, getWDCGame, handleTurnLoop, WDCGameState } from '../framewor
 import { createSelectCardMessage } from '../utils';
 
 export default new Component({
-  customId: /^g:select_cards:confirm$/,
+  customId: /^select_cards:confirm$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;
@@ -15,6 +15,7 @@ export default new Component({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
           content: "❌ There aren't any ongoing games on this channel!",
+          components: [],
           flags: MessageFlags.Ephemeral,
         },
       });
@@ -26,6 +27,7 @@ export default new Component({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
           content: "❌ You aren't in this game!",
+          components: [],
           flags: MessageFlags.Ephemeral,
         },
       });
@@ -36,6 +38,7 @@ export default new Component({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
           content: "❌ Cannot set cards in a game that hasn't started",
+          components: [],
           flags: MessageFlags.Ephemeral,
         },
       });
@@ -46,6 +49,7 @@ export default new Component({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
           content: '❌ You are dead!',
+          components: [],
           flags: MessageFlags.Ephemeral,
         },
       });
@@ -56,6 +60,7 @@ export default new Component({
         type: InteractionResponseType.UpdateMessage,
         data: {
           content: '❌ Cannot select cards right now!',
+          components: [],
           flags: MessageFlags.Ephemeral,
         },
       });

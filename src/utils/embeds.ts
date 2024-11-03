@@ -49,7 +49,7 @@ export function createSelectCardMessage(
             {
               type: ComponentType.Button,
               style: ButtonStyle.Success,
-              custom_id: 'g:select_cards:confirm',
+              custom_id: 'select_cards:confirm',
               label: player.submittedChosenCards ? 'Submitted!' : 'Submit',
               disabled: player.submittedChosenCards,
             },
@@ -70,7 +70,7 @@ function createSelectCardComponent(
     components: [
       {
         type: ComponentType.StringSelect,
-        custom_id: `g:select_cards:use:${cardIndex}`,
+        custom_id: `select_cards:use:${cardIndex}`,
         options: createSelectCardComponentOptions(player, cardIndex),
       },
     ],
@@ -82,7 +82,10 @@ function createSelectCardComponentOptions(player: WDCGamePlayer, cardIndex: numb
   for (const { cardId } of player.cards) {
     const card = getCard(cardId)!;
     options.push({
-      label: card.name,
+      label:
+        card.id === player.chosenCards[cardIndex]?.cardId && card.handleCustomName
+          ? card.handleCustomName({ player, card, cardIndex })
+          : card.name,
       description: card.description,
       value: card.id,
       default: card.id === player.chosenCards[cardIndex]?.cardId,
