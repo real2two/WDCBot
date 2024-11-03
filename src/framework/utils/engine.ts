@@ -1,9 +1,9 @@
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
-import type { BaseInteraction } from '@httpi/client';
 import { sendChannelMessage } from '../../utils';
 import { cards } from '../cards';
-import type { WDCGame } from '../types';
 import { deleteWDCGame } from './games';
+import type { BaseInteraction } from '@httpi/client';
+import type { WDCGame } from '../types';
 
 export async function handleRoundLoop({
   interaction,
