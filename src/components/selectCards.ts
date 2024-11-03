@@ -113,6 +113,5 @@ function createSelectCardComponentOptions(player: WDCGamePlayer, cardIndex: numb
       default: card.id === player.chosenCardIds[cardIndex],
     });
   }
-  console.log(options);
   return options;
 }
