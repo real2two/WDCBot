@@ -1,23 +1,27 @@
-import {
-  type APIGuildMember,
-  type APIUser,
-  ButtonStyle,
-  ComponentType,
-  InteractionResponseType,
-} from 'discord-api-types/v10';
+import { ButtonStyle, ComponentType, InteractionResponseType } from 'discord-api-types/v10';
 import { Card } from './Card';
-import type { CardHandleCustomInputContext } from '../types';
+import type {
+  CardExecuteContext,
+  CardHandleCustomInputContext,
+  CardSelectUserData,
+  WDCGameChosenCard,
+} from '../types';
 
 export class CardSelectUser extends Card {
-  constructor(data: ConstructorParameters<typeof Card>[0]) {
-    super(data);
+  constructor(
+    data: Omit<ConstructorParameters<typeof Card>[0], 'execute'> & {
+      execute: (
+        ctx: CardExecuteContext & {
+          playerChosenCard: Omit<WDCGameChosenCard, 'data'> & { data: CardSelectUserData };
+        },
+      ) => void | Promise<void>;
+    },
+  ) {
+    super(data as ConstructorParameters<typeof Card>[0]);
     this.handleCustomInput = handleCustomInputCardSelectUser;
     this.handleCustomName = ({ player, card }) => {
-      const data = player.chosenCards.find((c) => c?.cardId === card.id)!.data as {
-        id: string;
-        user?: APIUser;
-        member?: APIGuildMember;
-      };
+      const data = player.chosenCards.find((c) => c?.cardId === card.id)!
+        .data as CardSelectUserData;
       return `${card.name} ${data.member?.nick || data.user?.global_name || data.user?.username || data.id}`;
     };
   }

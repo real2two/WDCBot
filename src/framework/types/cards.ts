@@ -1,4 +1,4 @@
-import type { APIEmbed } from 'discord-api-types/v10';
+import type { APIEmbed, APIGuildMember, APIUser } from 'discord-api-types/v10';
 import type { InteractionRequestData } from '@httpi/client';
 import type { WDCGame, WDCGameChosenCard, WDCGamePlayer, WDCGamePlayerCard } from './games';
 import type { Card } from '../structures';
@@ -46,4 +46,10 @@ export interface CardHandleCustomNameContext {
   player: WDCGamePlayer;
   card: Card;
   cardIndex: number;
+}
+
+export interface CardSelectUserData {
+  id: string;
+  user?: APIUser;
+  member?: APIGuildMember;
 }
