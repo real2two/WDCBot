@@ -10,7 +10,7 @@ export default new Card({
   order: -1,
   suborder: 0,
 
-  execute(ctx) {
-    // WIP
+  execute({ respond }) {
+    respond('test laser');
   },
 });

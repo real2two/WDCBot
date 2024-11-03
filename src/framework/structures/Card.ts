@@ -1,4 +1,4 @@
-import type { CardExecuteContext, CardType, WDCGame } from '../types';
+import type { CardBeforeAfterContext, CardExecuteContext, CardType, WDCGame } from '../types';
 
 export class Card {
   id: string;
@@ -12,8 +12,8 @@ export class Card {
   turnCooldown: number;
   quantity: number;
   execute: (ctx: CardExecuteContext) => void | Promise<void>;
-  beforeOrder?: (ctx: CardExecuteContext) => void | Promise<void>;
-  afterOrder?: (ctx: CardExecuteContext) => void | Promise<void>;
+  beforeOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
+  afterOrder?: (ctx: CardBeforeAfterContext) => void | Promise<void>;
 
   constructor({
     id,

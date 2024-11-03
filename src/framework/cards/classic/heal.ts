@@ -11,7 +11,7 @@ export default new Card({
   suborder: 0,
   turnCooldown: 2,
 
-  execute(ctx) {
-    // WIP
+  execute({ respond }) {
+    respond('test heal');
   },
 });

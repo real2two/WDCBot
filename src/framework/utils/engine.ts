@@ -150,7 +150,14 @@ export async function handleTurnLoop({
         ({ card }) => card.suborder,
       );
 
-      // TODO: Handle beforeOrder here
+      // Partial execute context
+      const partialContext = { game, round: game.round, turn, order, respond };
+
+      // Handle beforeOrder here
+      for (const card of game.usedCardsWithBeforeAfterFunctions) {
+        await card.beforeOrder?.({ ...partialContext, suborder: 0, step: CardStep.BeforeOrder });
+        await waitRandom(2000, 5000);
+      }
 
       if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.BeforeOrder }))
         return;
@@ -159,27 +166,26 @@ export async function handleTurnLoop({
         // Handle suborder
         for (const { player, card } of chosenCardsForSuborder) {
           // TODO: Add a way to select a user to attack/heal for some cards (such as slash, heal and alternator)
+          await card.execute({ ...partialContext, player, suborder, step: CardStep.Normal });
 
-          await card.execute({
-            game,
-            player,
-            round: game.round,
-            turn,
-            order,
-            suborder,
-            step: CardStep.Normal,
-            respond,
-          });
+          if (
+            (card.beforeOrder || card.afterOrder) &&
+            !game.usedCardsWithBeforeAfterFunctions.has(card)
+          ) {
+            game.usedCardsWithBeforeAfterFunctions.add(card);
+          }
 
-          // TODO: Support "<Card>.beforeOrder" and "<Card>.afterOrder" as well.
-          //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
-          //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
+          await waitRandom(2000, 5000);
         }
       }
 
       if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.Normal })) return;
 
-      // TODO: Handle afterOrder here
+      // Handle afterOrder here
+      for (const card of game.usedCardsWithBeforeAfterFunctions) {
+        await card.afterOrder?.({ ...partialContext, suborder: 0, step: CardStep.AfterOrder });
+        await waitRandom(2000, 5000);
+      }
 
       if (handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.AfterOrder }))
         return;

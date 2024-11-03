@@ -13,9 +13,12 @@ export enum CardStep {
   AfterOrder = 2,
 }
 
-export interface CardExecuteContext {
-  game: WDCGame;
+export interface CardExecuteContext extends CardBeforeAfterContext {
   player: WDCGamePlayer;
+}
+
+export interface CardBeforeAfterContext {
+  game: WDCGame;
   round: number;
   turn: number;
   order: number;

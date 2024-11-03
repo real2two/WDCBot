@@ -11,7 +11,7 @@ export default new Card({
   order: 0,
   suborder: 0,
 
-  execute(ctx) {
-    // WIP
+  execute({ respond }) {
+    respond('test alternator');
   },
 });

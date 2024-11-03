@@ -12,7 +12,7 @@ export default new Card({
   suborder: 0,
   quantity: 6,
 
-  execute(ctx) {
-    // WIP
+  execute({ respond }) {
+    respond('test shield');
   },
 });
