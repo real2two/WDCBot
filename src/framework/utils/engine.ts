@@ -137,7 +137,7 @@ export async function handleTurnLoop({
             channelId,
             game,
             turn,
-            order: 0,
+            order: Number.NEGATIVE_INFINITY,
             step: CardStep.Normal,
             skipDeathMessages: true,
           })

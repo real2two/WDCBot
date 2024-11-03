@@ -1,6 +1,6 @@
 import { CardSelectUser } from '../../structures';
-import { CardType } from '../../types';
 import { getPlayer } from '../../utils';
+import { CardType, type CardStep } from '../../types';
 
 export default new CardSelectUser({
   id: 'classic:slash',
@@ -11,7 +11,7 @@ export default new CardSelectUser({
   order: 0,
   suborder: 0,
 
-  execute({ game, player, playerChosenCard, turn, respond }) {
+  execute({ game, player, playerChosenCard, round, turn, step, order, suborder, respond }) {
     const targettedPlayer = getPlayer(game, playerChosenCard.data.id)!;
 
     if (targettedPlayer.diedAt) {
@@ -28,8 +28,21 @@ export default new CardSelectUser({
       );
     }
 
-    // TODO: Check if opponent is using power up
-    const healthLost = 1;
+    // Check if player activated a power up
+    const activedPowerup = game.kv.get(`classic:powerup:${player.userId}`) as
+      | {
+          round: number;
+          turn: number;
+          step: CardStep;
+        }
+      | undefined;
+
+    const healthLost =
+      activedPowerup?.round === round &&
+      activedPowerup.turn + 1 === turn &&
+      activedPowerup.step === step
+        ? 2
+        : 1;
 
     if (targettedCardForTurn.cardId === 'classic:reflect') {
       // Handle if opponent has a shield

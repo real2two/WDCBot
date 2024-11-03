@@ -9,10 +9,11 @@ export default new Card({
   image: 'https://i.imgur.com/KoiBNIw.png',
   emoji: '⚡',
   order: 0,
-  suborder: 0,
+  suborder: -2,
   quantity: 1,
 
-  execute({ respond }) {
-    respond('test powerup');
+  execute({ game, player, round, turn, step, respond }) {
+    game.kv.set(`classic:powerup:${player.userId}`, { round, turn, step });
+    return respond(`<@${player.userId}> actived a power up! `);
   },
 });
