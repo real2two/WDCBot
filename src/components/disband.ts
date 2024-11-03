@@ -6,12 +6,7 @@ import {
   MessageFlags,
 } from 'discord-api-types/v10';
 import { deleteWDCGame, getWDCGame } from '../framework';
-import {
-  hasManageGuild,
-  editInteractionFollowup,
-  sendInteractionFollowup,
-  sendInteractionResponse,
-} from '../utils';
+import { hasManageGuild, sendInteractionResponse } from '../utils';
 
 export default new Component({
   customId: /^g:disband:(start|confirm)$/,

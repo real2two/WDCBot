@@ -4,6 +4,7 @@ import type {
   APIInteractionResponse,
   APIInteractionResponseCallbackData,
   RESTPatchAPIInteractionOriginalResponseJSONBody,
+  RESTPostAPIChannelMessageJSONBody,
 } from 'discord-api-types/v10';
 
 const headers = {
@@ -73,5 +74,16 @@ export function deleteWebhook(webhookId: string) {
   return fetch(`https://discord.com/api/v10/webhooks/${webhookId}`, {
     method: 'delete',
     headers,
+  });
+}
+
+export function sendChannelMessage(channelId: string, data: RESTPostAPIChannelMessageJSONBody) {
+  return fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bot ${env.DiscordToken}`,
+    },
+    body: JSON.stringify(data),
   });
 }

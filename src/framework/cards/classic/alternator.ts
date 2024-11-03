@@ -6,7 +6,7 @@ export default new Card({
   types: [CardType.Supportive],
   name: 'Alternator',
   description:
-    'Use this on an opponent. If they use an offensive card, you lose a heart, but if they use a defensive card, they lose a heart. Otherwise, nothing happens.',
+    'If opponent uses an offensive card, you lose a heart; if defensive, they lose a heart. Else nothing.',
   image: 'https://i.imgur.com/10QiEwl.png',
   order: 0,
   suborder: 0,

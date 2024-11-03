@@ -1,13 +1,9 @@
-import {
-  ButtonStyle,
-  ComponentType,
-  InteractionResponseType,
-  MessageFlags,
-} from 'discord-api-types/v10';
-import type { BaseInteraction, CustomAPIInteractionResponse } from '@httpi/client';
-import { sendInteractionFollowup, sendInteractionResponse } from '../../utils';
+import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
+import type { BaseInteraction } from '@httpi/client';
+import { sendChannelMessage } from '../../utils';
 import { cards } from '../cards';
 import type { WDCGame } from '../types';
+import { deleteWDCGame } from './games';
 
 export async function handleRoundLoop({
   interaction,
@@ -16,6 +12,8 @@ export async function handleRoundLoop({
   interaction: BaseInteraction;
   game: WDCGame;
 }) {
+  const channelId = interaction.channel!.id;
+
   // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
   // TODO: Disallow players from selecting cards if <WDCGame>.currentlyHandlingTurns is true
 
@@ -34,72 +32,68 @@ export async function handleRoundLoop({
   }
 
   // Create response
-  await sendInteractionResponse(interaction, {
-    type: InteractionResponseType.ChannelMessageWithSource,
-    data: {
-      embeds: [
-        {
-          color: 0x57f287,
-          description: `## Round ${game.round}\n\n${game.players
-            .map(
-              (p) =>
-                `- <@${p.userId}> ❤️ ${p.health}` +
-                `${
-                  game.publicInventory
-                    ? ` ${p.cards
-                        .filter((c) => c.quantity !== Number.POSITIVE_INFINITY)
-                        .map(
-                          (pc) =>
-                            `${cards.find((c) => pc.cardId === c.id)?.emoji || '❓'} ${pc.quantity}`,
-                        )
-                        .join(' ')}`
-                    : ''
-                }`,
-            )
-            .join('\n')}`,
-          footer: {
-            text: 'Click on the button below to select your cards within 1 minute!',
-          },
+  const { status } = await sendChannelMessage(channelId, {
+    embeds: [
+      {
+        color: 0x57f287,
+        description: `## Round ${game.round}\n\n${game.players
+          .map(
+            (p) =>
+              `- <@${p.userId}> ❤️ ${p.health}` +
+              `${
+                game.publicInventory
+                  ? ` ${p.cards
+                      .filter((c) => c.quantity !== Number.POSITIVE_INFINITY)
+                      .map(
+                        (pc) =>
+                          `${cards.find((c) => pc.cardId === c.id)?.emoji || '❓'} ${pc.quantity}`,
+                      )
+                      .join(' ')}`
+                  : ''
+              }`,
+          )
+          .join('\n')}`,
+        footer: {
+          text: 'Click on the button below to select your cards within 1 minute!',
         },
-      ],
-      components: [
-        {
-          type: ComponentType.ActionRow,
-          components: [
-            {
-              type: ComponentType.Button,
-              style: ButtonStyle.Primary,
-              custom_id: 'select_cards',
-              label: 'Select your cards',
-              emoji: {
-                name: '🎴',
-              },
+      },
+    ],
+    components: [
+      {
+        type: ComponentType.ActionRow,
+        components: [
+          {
+            type: ComponentType.Button,
+            style: ButtonStyle.Primary,
+            custom_id: 'g:select_cards',
+            label: 'Select your cards',
+            emoji: {
+              name: '🎴',
             },
-          ],
-        },
-      ],
-    },
+          },
+        ],
+      },
+    ],
   });
+  if (status !== 200) return deleteWDCGame(channelId);
 
   // Set warning timers
   game.loopTimers.push(
-    setTimeout(
-      () =>
-        sendInteractionFollowup(interaction, {
-          content: '🕚 You have **10 more seconds left** to select your cards!',
-        }),
-      50000,
-    ),
+    setTimeout(async () => {
+      const { status } = await sendChannelMessage(channelId, {
+        content: '🕚 You have **10 more seconds left** to select your cards!',
+      });
+      if (status !== 200) return deleteWDCGame(channelId);
+    }, 50000),
   );
 
   game.loopTimers.push(
-    setTimeout(
-      () =>
-        sendInteractionFollowup(interaction, {
-          content: '‼️ You have **5 more seconds left** to select your cards!',
-        }),
-      55000,
-    ),
+    setTimeout(async () => {
+      const { status } = await sendChannelMessage(channelId, {
+        content: '‼️ You have **5 more seconds left** to select your cards!',
+      });
+      if (status !== 200) return deleteWDCGame(channelId);
+    }, 55000),
   );
 
   // Set handleTurnLoop timer if someone doesn't choose all their cards in time
@@ -113,6 +107,8 @@ export async function handleTurnLoop({
   interaction: BaseInteraction;
   game: WDCGame;
 }) {
+  const channelId = interaction.channel!.id;
+
   // Check if you're currently handling turns (prevents race-condition)
   if (game.currentlyHandlingTurns) return;
   game.currentlyHandlingTurns = true;
@@ -145,7 +141,10 @@ export async function handleTurnLoop({
   //       This can be done by adding cards to the "game.usedCardsWithBeforeAfterFunctions" Set<Card> after the card is used.
   //       Don't add card to Set<Card> if it's already in it or it doesn't have a <Card>.beforeOrder or <Card>.afterOrder function.
 
-  await sendInteractionFollowup(interaction, {
+  const { status } = await sendChannelMessage(channelId, {
     content: 'handle turn loop',
   });
+  if (status !== 200) return deleteWDCGame(channelId);
+
+  // TODO: Make sure to disband the game if there's ever a send channel message error
 }

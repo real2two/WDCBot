@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { cards, getWDCGame, handleRoundLoop, WDCGameState } from '../framework';
+import { getCard, getWDCGame, handleRoundLoop, WDCGameState } from '../framework';
 
 export default new Component({
   customId: /^g:start$/,
@@ -68,7 +68,7 @@ export default new Component({
 
       player.cards = [];
       for (const cardId of classicCards) {
-        const card = cards.find(({ id }) => cardId === id)!;
+        const card = getCard(cardId)!;
         player.cards.push({
           cardId: card.id,
           quantity: card.quantity,
@@ -81,6 +81,11 @@ export default new Component({
     game.state = WDCGameState.Started;
 
     // Start game
-    return handleRoundLoop({ interaction, game });
+    handleRoundLoop({ interaction, game });
+
+    // Defer interaction
+    return respond({
+      type: InteractionResponseType.DeferredMessageUpdate,
+    });
   },
 });

@@ -57,5 +57,8 @@ export class Card {
     this.execute = execute;
     this.beforeOrder = beforeOrder;
     this.afterOrder = afterOrder;
+
+    if (this.id.length > 30 || this.name.length > 100 || this.description.length > 100)
+      throw new Error(`Card id, name or description's length is too long: ${this.id}`);
   }
 }

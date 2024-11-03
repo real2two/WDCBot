@@ -3,7 +3,7 @@ import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { ButtonStyle, ComponentType } from '@discordjs/core';
 
 import { getWDCGame, createWDCGame, WDCGameState, type WDCGame } from '../../framework';
-import { createPrepEmbeds } from '../../utils';
+import { createPrepEmbeds, hasViewChannelSendMessagesAndEmbedLinks } from '../../utils';
 
 export default new Subcommand({
   data: {
@@ -11,6 +11,17 @@ export default new Subcommand({
     description: 'Begin a classic Wildly Deadly Cards match',
   },
   async execute({ user, interaction, respond }) {
+    if (!hasViewChannelSendMessagesAndEmbedLinks(interaction.app_permissions)) {
+      return respond({
+        type: InteractionResponseType.ChannelMessageWithSource,
+        data: {
+          content:
+            '❌ Missing permissions! Make sure the bot has `VIEW_CHANNEL`, `SEND_MESSAGES` and `EMBED_LINKS` permissions on this channel!',
+          flags: MessageFlags.Ephemeral,
+        },
+      });
+    }
+
     const channelId = interaction.channel?.id;
     if (!channelId) return;
 
