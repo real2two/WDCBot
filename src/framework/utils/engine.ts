@@ -123,6 +123,7 @@ export async function handleTurnLoop({
   if (afkPlayers.length) {
     for (const player of afkPlayers) {
       player.health = 0;
+      player.chosenCardIds = [null, null, null, null];
     }
 
     // TODO: Add messages for killing AFK users

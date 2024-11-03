@@ -1,10 +1,9 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
 import { getPlayer, getWDCGame, WDCGameState } from '../framework';
-import { createSelectCardComponents } from '../utils';
 
 export default new Component({
-  customId: /^g:select_cards$/,
+  customId: /^g:select_cards:confirm$/,
   async execute({ user, interaction, respond }) {
     const channelId = interaction.channel?.id;
     if (!channelId) return;
@@ -51,12 +50,10 @@ export default new Component({
       });
     }
 
-    // TODO: Check if player has enough quantity to use the card on submit + check turn cooldown
-    return respond({
-      type: InteractionResponseType.ChannelMessageWithSource,
+    respond({
+      type: InteractionResponseType.UpdateMessage,
       data: {
-        content: '### Select your cards',
-        components: createSelectCardComponents(player),
+        content: 'lol',
         flags: MessageFlags.Ephemeral,
       },
     });
