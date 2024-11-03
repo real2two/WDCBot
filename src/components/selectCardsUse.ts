@@ -51,6 +51,16 @@ export default new Component({
       });
     }
 
+    if (game.currentlyHandlingTurns) {
+      return respond({
+        type: InteractionResponseType.UpdateMessage,
+        data: {
+          content: '❌ Cannot select cards right now!',
+          flags: MessageFlags.Ephemeral,
+        },
+      });
+    }
+
     // Get the card index, and card ID
     const cardIndex = interaction.data?.custom_id.split(':')?.[3] ?? 0;
     const cardId = interaction.data?.values?.[0] ?? null;

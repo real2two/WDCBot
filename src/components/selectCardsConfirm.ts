@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { getPlayer, getWDCGame, WDCGameState } from '../framework';
+import { getPlayer, getWDCGame, handleTurnLoop, WDCGameState } from '../framework';
 import { createSelectCardMessage } from '../utils';
 
 export default new Component({
@@ -51,6 +51,16 @@ export default new Component({
       });
     }
 
+    if (game.currentlyHandlingTurns) {
+      return respond({
+        type: InteractionResponseType.UpdateMessage,
+        data: {
+          content: '❌ Cannot select cards right now!',
+          flags: MessageFlags.Ephemeral,
+        },
+      });
+    }
+
     if (player.chosenCardIds.some((c) => !c)) {
       return createSelectCardMessage(
         player,
@@ -61,11 +71,15 @@ export default new Component({
 
     player.submittedChosenCards = true;
 
-    return createSelectCardMessage(
-      player,
-      respond,
-      // TODO: Handle starting the game if everyone submitted!
-      '✅ Submitted! You can still make changes until the game begins.',
-    );
+    if (game.players.some((p) => !p.submittedChosenCards)) {
+      return createSelectCardMessage(
+        player,
+        respond,
+        '✅ Submitted! You can still make changes until the game begins.',
+      );
+    }
+
+    createSelectCardMessage(player, respond, '✅ Submitted!');
+    return handleTurnLoop({ channelId, game });
   },
 });

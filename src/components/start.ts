@@ -80,7 +80,7 @@ export default new Component({
     game.state = WDCGameState.Started;
 
     // Start game
-    handleRoundLoop({ interaction, game });
+    handleRoundLoop({ channelId, game });
 
     // Defer interaction
     return respond({

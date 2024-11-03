@@ -51,6 +51,16 @@ export default new Component({
       });
     }
 
+    if (game.currentlyHandlingTurns) {
+      return respond({
+        type: InteractionResponseType.UpdateMessage,
+        data: {
+          content: '❌ Cannot select cards right now!',
+          flags: MessageFlags.Ephemeral,
+        },
+      });
+    }
+
     return createSelectCardMessage(player, respond, '', true);
   },
 });

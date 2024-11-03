@@ -2,21 +2,15 @@ import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { sendChannelMessage } from '../../utils';
 import { cards } from '../cards';
 import { deleteWDCGame } from './games';
-import type { BaseInteraction } from '@httpi/client';
 import type { WDCGame } from '../types';
 
 export async function handleRoundLoop({
-  interaction,
+  channelId,
   game,
 }: {
-  interaction: BaseInteraction;
+  channelId: string;
   game: WDCGame;
 }) {
-  const channelId = interaction.channel!.id;
-
-  // TODO: Save chosen cards for a player through <WDCGamePlayer>.chosenCardIds and use them when starting turn 1
-  // TODO: Disallow players from selecting cards if <WDCGame>.currentlyHandlingTurns is true
-
   // Update the game's round (+1)
   game.round++;
 
@@ -97,18 +91,16 @@ export async function handleRoundLoop({
   );
 
   // Set handleTurnLoop timer if someone doesn't choose all their cards in time
-  game.loopTimers.push(setTimeout(() => handleTurnLoop({ interaction, game }), 60000));
+  game.loopTimers.push(setTimeout(() => handleTurnLoop({ channelId, game }), 60000));
 }
 
 export async function handleTurnLoop({
-  interaction,
+  channelId,
   game,
 }: {
-  interaction: BaseInteraction;
+  channelId: string;
   game: WDCGame;
 }) {
-  const channelId = interaction.channel!.id;
-
   // Check if you're currently handling turns (prevents race-condition)
   if (game.currentlyHandlingTurns) return;
   game.currentlyHandlingTurns = true;
@@ -134,6 +126,8 @@ export async function handleTurnLoop({
     //   `${afkPlayerMentions.slice(0, -1).join(', ')} and ${afkPlayerMentions.slice(-1)}`;
     // }
   }
+
+  // TODO: Use <WDCGamePlayer>.chosenCardIds for turns
 
   // TODO: Have an "automatic disband" system in place if messages stop being sent
   // TODO: Have a button the host has to press to go to start the next round (to mitigate the 15 minute interaction limit issue)
