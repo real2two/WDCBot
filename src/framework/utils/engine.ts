@@ -111,7 +111,7 @@ export async function handleTurnLoop({
     // Handle kicking AFK users (turn 1 only)
     await waitRandom(2000, 5000);
     if (turn === 1) {
-      const afkPlayers = game.players.filter((p) => !p.submittedChosenCards);
+      const afkPlayers = game.players.filter((p) => !p.submittedChosenCards && !p.diedAt);
       if (afkPlayers.length) {
         for (const player of afkPlayers) {
           // Kill AFK player
