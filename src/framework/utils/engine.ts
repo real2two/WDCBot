@@ -207,7 +207,7 @@ export async function handleTurnLoop({
         // Handle suborder
         for (const { player, card } of chosenCardsForSuborder) {
           // Ignore dead players
-          if (player.health <= 0) continue;
+          if (player.diedAt) continue;
 
           // Execute card
           await card.execute({
