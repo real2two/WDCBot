@@ -16,12 +16,12 @@ export default new Card({
     respond(`<@${player.userId}> used laser...`);
 
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 1]?.cardId === 'classic:powerup' ? 2 : 1;
+    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
 
     for (const targettedPlayer of game.players.filter((p) => !p.diedAt)) {
       await waitRandom(2000, 5000);
 
-      const targettedCardForTurn = targettedPlayer.chosenCards[turn]!;
+      const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
 
       if (targettedCardForTurn.cardId === 'classic:shield') {
         // Handle if opponent has a shield

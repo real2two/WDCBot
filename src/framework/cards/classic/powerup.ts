@@ -12,7 +12,8 @@ export default new Card({
   suborder: -2,
   quantity: 1,
 
-  execute({ player, respond }) {
-    return respond(`<@${player.userId}> actived a power up!`);
+  execute({ player, playerCard, respond }) {
+    playerCard.quantity--;
+    return respond(`<@${player.userId}> activated a power up!`);
   },
 });

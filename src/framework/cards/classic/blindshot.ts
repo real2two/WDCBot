@@ -17,7 +17,7 @@ export default new Card({
     const targettedPlayer = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
 
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 1]?.cardId === 'classic:powerup' ? 4 : 2;
+    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 4 : 2;
 
     // Send initial message
     respond(`<@${player.userId}> used blindshot and it hit...`);
@@ -26,7 +26,7 @@ export default new Card({
     await waitRandom(2000, 8000);
 
     // Check if targetted player has shield/reflect up
-    const targettedCardForTurn = targettedPlayer.chosenCards[turn]!;
+    const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
 
     if (targettedCardForTurn.cardId === 'classic:shield') {
       // Handle if opponent has a shield

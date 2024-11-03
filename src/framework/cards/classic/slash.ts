@@ -19,7 +19,7 @@ export default new CardSelectUser({
       return respond(`<@${player.userId}> slashed <@${targettedPlayer.userId}>'s dead body.`);
     }
 
-    const targettedCardForTurn = targettedPlayer.chosenCards[turn]!;
+    const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
 
     if (targettedCardForTurn.cardId === 'classic:shield') {
       // Handle if opponent has a shield
@@ -29,7 +29,7 @@ export default new CardSelectUser({
     }
 
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 1]?.cardId === 'classic:powerup' ? 2 : 1;
+    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
 
     if (targettedCardForTurn.cardId === 'classic:reflect') {
       // Handle if opponent has a reflect

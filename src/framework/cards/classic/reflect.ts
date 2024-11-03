@@ -12,7 +12,8 @@ export default new Card({
   suborder: -2,
   quantity: 3,
 
-  execute({ player, respond }) {
-    return respond(`<@${player.userId}> actived a reflect!`);
+  execute({ player, playerCard, respond }) {
+    playerCard.quantity--;
+    return respond(`<@${player.userId}> activated a reflect!`);
   },
 });

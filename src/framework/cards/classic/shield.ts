@@ -12,7 +12,8 @@ export default new Card({
   suborder: -1,
   quantity: 6,
 
-  execute({ player, respond }) {
-    return respond(`<@${player.userId}> actived a shield!`);
+  execute({ player, playerCard, respond }) {
+    playerCard.quantity--;
+    return respond(`<@${player.userId}> activated a shield!`);
   },
 });

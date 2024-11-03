@@ -23,11 +23,11 @@ export default new CardSelectUser({
     }
 
     // Get opponent's card
-    const targettedCardForTurn = targettedPlayer.chosenCards[turn]!;
+    const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
     const card = getCard(targettedCardForTurn.cardId);
 
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 1]?.cardId === 'classic:powerup' ? 2 : 1;
+    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
 
     // Used when opponent used an offensive card
     if (card?.types.includes(CardType.Offensive)) {
