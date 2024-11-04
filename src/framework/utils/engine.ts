@@ -34,7 +34,7 @@ export async function handleRoundLoop({
         color: 0x57f287,
         description: `## Round ${game.round}\n\n${convertPlayersToText(game)}`,
         footer: {
-          text: 'Click on the button below to select your cards within 1 minute!',
+          text: 'Click on the button below to select your cards within 2 minutes!',
         },
       },
     ],
@@ -64,7 +64,7 @@ export async function handleRoundLoop({
         content: '🕚 You have **10 more seconds left** to select your cards!',
       });
       if (status !== 200) return deleteWDCGame(channelId);
-    }, 50000),
+    }, 110000),
   );
 
   game.loopTimers.push(
@@ -73,11 +73,11 @@ export async function handleRoundLoop({
         content: '‼️ You have **5 more seconds left** to select your cards!',
       });
       if (status !== 200) return deleteWDCGame(channelId);
-    }, 55000),
+    }, 115000),
   );
 
   // Set handleTurnLoop timer if someone doesn't choose all their cards in time
-  game.loopTimers.push(setTimeout(() => handleTurnLoop({ channelId, game }), 60000));
+  game.loopTimers.push(setTimeout(() => handleTurnLoop({ channelId, game }), 120000));
 }
 
 export async function handleTurnLoop({
