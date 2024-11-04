@@ -24,4 +24,7 @@ app.post(
 
 app.all('*', (c) => c.text('Not found', 404));
 
-export default app;
+export default {
+  port: env.WebsitePort,
+  fetch: app.fetch,
+};
