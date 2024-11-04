@@ -76,7 +76,7 @@ export default new Component({
 
     player.submittedChosenCards = true;
 
-    if (game.players.some((p) => !p.submittedChosenCards)) {
+    if (game.players.filter((p) => !p.diedAt).some((p) => !p.submittedChosenCards)) {
       return createSelectCardMessage(
         player,
         respond,
