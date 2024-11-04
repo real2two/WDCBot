@@ -1,5 +1,6 @@
 import { Card } from '../../structures';
 import { CardType } from '../../types';
+import { getRandomMessage } from '../../utils';
 
 export default new Card({
   id: 'classic:shield',
@@ -14,6 +15,10 @@ export default new Card({
 
   execute({ player, playerCard, respond }) {
     playerCard.quantity--;
-    return respond(`<@${player.userId}> activated a shield!`);
+    return respond(
+      getRandomMessage(this.id, 'success', {
+        attacker: `<@${player.userId}>`,
+      }),
+    );
   },
 });

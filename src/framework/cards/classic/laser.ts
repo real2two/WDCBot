@@ -1,6 +1,6 @@
 import { Card } from '../../structures';
 import { CardType } from '../../types';
-import { waitRandom } from '../../utils';
+import { getRandomMessage, waitRandom } from '../../utils';
 
 export default new Card({
   id: 'classic:laser',
@@ -12,11 +12,17 @@ export default new Card({
   suborder: -1,
 
   async execute({ game, player, turn, respond }) {
-    // Send initial message
-    respond(`<@${player.userId}> used laser...`);
-
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
+    const playerUsedPowerup = player.chosenCards[turn - 2]?.cardId === 'classic:powerup';
+    const hpLost = playerUsedPowerup ? 2 : 1;
+
+    // Send initial message
+    respond(
+      getRandomMessage(this.id, playerUsedPowerup ? 'initialPowerup' : 'initial', {
+        attacker: `<@${player.userId}>`,
+        estimatedHpLost: hpLost,
+      }),
+    );
 
     for (const targettedPlayer of game.players.filter((p) => !p.diedAt)) {
       await waitRandom(2000, 5000);
@@ -25,7 +31,13 @@ export default new Card({
 
       if (targettedCardForTurn.cardId === 'classic:shield') {
         // Handle if opponent has a shield
-        respond(`<@${targettedPlayer.userId}> blocked the laser with a shield!`);
+        respond(
+          getRandomMessage(this.id, playerUsedPowerup ? 'hasShieldPowerup' : 'hasShield', {
+            attacker: `<@${player.userId}>`,
+            victim: `<@${targettedPlayer.userId}>`,
+            estimatedHpLost: hpLost,
+          }),
+        );
         continue;
       }
 
@@ -33,14 +45,35 @@ export default new Card({
         // Handle if opponent has a reflect
         player.health -= hpLost * 2;
         respond(
-          `<@${targettedPlayer.userId}> reflected the laser, making <@${player.userId}> lose **❤️ ${hpLost}**!`,
+          getRandomMessage(this.id, playerUsedPowerup ? 'hasReflectPowerup' : 'hasReflect', {
+            attacker: `<@${player.userId}>`,
+            victim: `<@${targettedPlayer.userId}>`,
+            hpLost: hpLost * 2,
+          }),
         );
         continue;
       }
 
       // Handle laser attack
-      targettedPlayer.health -= hpLost * (targettedCardForTurn.cardId === 'classic:laser' ? 2 : 1);
-      respond(`<@${targettedPlayer.userId}> was hit by the laser and lost **❤️ ${hpLost}**!`);
+      const opponentUsedLaser = targettedCardForTurn.cardId === 'classic:laser';
+      targettedPlayer.health -= hpLost * (opponentUsedLaser ? 2 : 1);
+      return respond(
+        getRandomMessage(
+          this.id,
+          playerUsedPowerup && opponentUsedLaser
+            ? 'successPowerupAndLaser'
+            : opponentUsedLaser
+              ? 'successLaser'
+              : playerUsedPowerup
+                ? 'successPowerup'
+                : 'success',
+          {
+            attacker: `<@${player.userId}>`,
+            victim: `<@${targettedPlayer.userId}>`,
+            hpLost: hpLost * (opponentUsedLaser ? 2 : 1),
+          },
+        ),
+      );
     }
   },
 });

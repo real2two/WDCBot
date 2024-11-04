@@ -1,5 +1,6 @@
 import { Card } from '../../structures';
 import { CardType } from '../../types';
+import { getRandomMessage } from '../../utils';
 
 export default new Card({
   id: 'classic:heal',
@@ -15,11 +16,20 @@ export default new Card({
     // Handle if player already has the maximum amount of health
     if (player.health >= game.maxHealth) {
       player.health = game.maxHealth;
-      return respond(`<@${player.userId}> tried to heal but already had the maximum amount of HP.`);
+      return respond(
+        getRandomMessage(this.id, 'maxedOut', {
+          attacker: `<@${player.userId}>`,
+        }),
+      );
     }
 
     // Heal player by 1 heart
     player.health++;
-    return respond(`<@${player.userId}> healed **❤️ 1**!`);
+    return respond(
+      getRandomMessage(this.id, 'success', {
+        attacker: `<@${player.userId}>`,
+        hpGained: 1,
+      }),
+    );
   },
 });

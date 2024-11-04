@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@httpi/adapter-hono": "^1.0.6",
-    "@httpi/client": "^1.0.11"
+    "@httpi/client": "^1.0.11",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@discordjs/core": "^1.2.0",
-    "@types/bun": "^1.1.12",
+    "@types/bun": "^1.1.13",
+    "@types/js-yaml": "^4.0.9",
     "discord-api-types": "^0.37.103"
   },
   "trustedDependencies": ["@biomejs/biome"]

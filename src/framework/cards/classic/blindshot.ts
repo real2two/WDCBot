@@ -1,6 +1,6 @@
 import { Card } from '../../structures';
 import { CardType } from '../../types';
-import { waitRandom } from '../../utils';
+import { getRandomMessage, waitRandom } from '../../utils';
 
 export default new Card({
   id: 'classic:blindshot',
@@ -17,10 +17,16 @@ export default new Card({
     const targettedPlayer = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
 
     // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 4 : 2;
+    const playerUsedPowerup = player.chosenCards[turn - 2]?.cardId === 'classic:powerup';
+    const hpLost = playerUsedPowerup ? 4 : 2;
 
     // Send initial message
-    respond(`<@${player.userId}> used blindshot and it hit...`);
+    respond(
+      getRandomMessage(this.id, playerUsedPowerup ? 'initialPowerup' : 'initial', {
+        attacker: `<@${player.userId}>`,
+        estimatedHpLost: hpLost,
+      }),
+    );
 
     // Timeout to add intensity
     await waitRandom(2000, 8000);
@@ -31,20 +37,51 @@ export default new Card({
     if (targettedCardForTurn.cardId === 'classic:shield') {
       // Handle if opponent has a shield
       return respond(
-        `<@${targettedPlayer.userId}> was blindshotted and the attack was blocked by a shield!`,
+        getRandomMessage(this.id, playerUsedPowerup ? 'hasShieldPowerup' : 'hasShield', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          estimatedHpLost: hpLost,
+        }),
       );
     }
 
     if (targettedCardForTurn.cardId === 'classic:reflect') {
       // Handle if opponent has a reflect
       player.health -= hpLost;
+
       return respond(
-        `<@${targettedPlayer.userId}> was blindshotted and but the attack was reflected, making <@${player.userId}> lose **❤️ ${hpLost}**!`,
+        getRandomMessage(this.id, playerUsedPowerup ? 'hasReflectPowerup' : 'hasReflect', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          hpLost,
+        }),
       );
     }
 
     // Opponent was hit
-    targettedPlayer.health -= hpLost * (targettedCardForTurn.cardId === 'classic:laser' ? 2 : 1);
-    respond(`<@${targettedPlayer.userId}> was blindshotted and lost **❤️ ${hpLost}**!`);
+    const opponentUsedLaser = targettedCardForTurn.cardId === 'classic:laser';
+    targettedPlayer.health -= hpLost * (opponentUsedLaser ? 2 : 1);
+
+    respond(
+      getRandomMessage(
+        this.id,
+        playerUsedPowerup && opponentUsedLaser
+          ? 'successPowerupAndLaser'
+          : opponentUsedLaser
+            ? 'successLaser'
+            : playerUsedPowerup
+              ? player.userId === targettedPlayer.userId
+                ? 'successPowerupSelf'
+                : 'successPowerup'
+              : player.userId === targettedPlayer.userId
+                ? 'successSelf'
+                : 'success',
+        {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          hpLost: hpLost * (opponentUsedLaser ? 2 : 1),
+        },
+      ),
+    );
   },
 });

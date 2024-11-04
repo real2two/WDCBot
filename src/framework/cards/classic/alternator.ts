@@ -1,6 +1,6 @@
 import { CardSelectUser } from '../../structures';
 import { CardType } from '../../types';
-import { getCard, getPlayer } from '../../utils';
+import { getCard, getPlayer, getRandomMessage } from '../../utils';
 
 export default new CardSelectUser({
   id: 'classic:alternator',
@@ -15,10 +15,18 @@ export default new CardSelectUser({
   execute({ game, player, playerChosenCard, turn, respond }) {
     const targettedPlayer = getPlayer(game, playerChosenCard.data.id)!;
 
+    // Check if player activated a power up
+    const playerUsedPowerup = player.chosenCards[turn - 2]?.cardId === 'classic:powerup';
+    const hpLost = playerUsedPowerup ? 2 : 1;
+
+    // Check if opponent is already dead
     if (targettedPlayer.diedAt) {
-      // Opponent is already dead
       return respond(
-        `<@${player.userId}> used alternator over <@${targettedPlayer.userId}>'s dead body. It did no effect.`,
+        getRandomMessage(this.id, playerUsedPowerup ? 'alreadyDeadPowerup' : 'alreadyDead', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          estimatedHpLost: hpLost,
+        }),
       );
     }
 
@@ -26,14 +34,19 @@ export default new CardSelectUser({
     const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
     const card = getCard(targettedCardForTurn.cardId);
 
-    // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
-
     // Used when opponent used an offensive card
     if (card?.types.includes(CardType.Offensive)) {
       player.health -= hpLost;
       return respond(
-        `<@${player.userId}> used alternator on <@${targettedPlayer.userId}> but <@${targettedPlayer.userId}> used an offensive card! <@${player.userId}> lost **❤️ ${hpLost}**.`,
+        getRandomMessage(
+          this.id,
+          playerUsedPowerup ? 'usedOffensiveCardPowerup' : 'usedOffensiveCard',
+          {
+            attacker: `<@${player.userId}>`,
+            victim: `<@${targettedPlayer.userId}>`,
+            hpLost,
+          },
+        ),
       );
     }
 
@@ -41,13 +54,25 @@ export default new CardSelectUser({
     if (card?.types.includes(CardType.Defensive)) {
       targettedPlayer.health -= hpLost;
       return respond(
-        `<@${player.userId}> used alternator on <@${targettedPlayer.userId}> and <@${targettedPlayer.userId}> used an defensive card! <@${targettedPlayer.userId}> lost **❤️ ${hpLost}**.`,
+        getRandomMessage(
+          this.id,
+          playerUsedPowerup ? 'usedDefensiveCardPowerup' : 'usedDefensiveCard',
+          {
+            attacker: `<@${player.userId}>`,
+            victim: `<@${targettedPlayer.userId}>`,
+            hpLost,
+          },
+        ),
       );
     }
 
     // No effect
     return respond(
-      `<@${player.userId}> used alternator on <@${targettedPlayer.userId}> but it had no effect.`,
+      getRandomMessage(this.id, playerUsedPowerup ? 'noEffectPowerup' : 'noEffect', {
+        attacker: `<@${player.userId}>`,
+        victim: `<@${targettedPlayer.userId}>`,
+        estimatedHpLost: hpLost,
+      }),
     );
   },
 });

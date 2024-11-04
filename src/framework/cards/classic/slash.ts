@@ -1,6 +1,6 @@
 import { CardSelectUser } from '../../structures';
-import { getPlayer } from '../../utils';
 import { CardType } from '../../types';
+import { getPlayer, getRandomMessage } from '../../utils';
 
 export default new CardSelectUser({
   id: 'classic:slash',
@@ -11,12 +11,22 @@ export default new CardSelectUser({
   order: 0,
   suborder: 0,
 
-  execute({ game, player, playerChosenCard, round, turn, step, respond }) {
+  execute({ game, player, playerChosenCard, turn, respond }) {
     const targettedPlayer = getPlayer(game, playerChosenCard.data.id)!;
 
+    // Check if player activated a power up
+    const playerUsedPowerup = player.chosenCards[turn - 2]?.cardId === 'classic:powerup';
+    const hpLost = playerUsedPowerup ? 2 : 1;
+
+    // Check if opponent is already dead
     if (targettedPlayer.diedAt) {
-      // Opponent is already dead
-      return respond(`<@${player.userId}> slashed <@${targettedPlayer.userId}>'s dead body.`);
+      return respond(
+        getRandomMessage(this.id, playerUsedPowerup ? 'alreadyDeadPowerup' : 'alreadyDead', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          estimatedHpLost: hpLost,
+        }),
+      );
     }
 
     const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
@@ -24,25 +34,45 @@ export default new CardSelectUser({
     if (targettedCardForTurn.cardId === 'classic:shield') {
       // Handle if opponent has a shield
       return respond(
-        `<@${player.userId}> slashed <@${targettedPlayer.userId}> but the attack was blocked by a shield!`,
+        getRandomMessage(this.id, playerUsedPowerup ? 'hasShieldPowerup' : 'hasShield', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          estimatedHpLost: hpLost,
+        }),
       );
     }
-
-    // Check if player activated a power up
-    const hpLost = player.chosenCards[turn - 2]?.cardId === 'classic:powerup' ? 2 : 1;
 
     if (targettedCardForTurn.cardId === 'classic:reflect') {
       // Handle if opponent has a reflect
       player.health -= hpLost;
       return respond(
-        `<@${player.userId}> slashed <@${targettedPlayer.userId}> but the attack was reflected, making <@${player.userId}> lose **❤️ ${hpLost}**!`,
+        getRandomMessage(this.id, playerUsedPowerup ? 'hasReflectPowerup' : 'hasReflect', {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          hpLost,
+        }),
       );
     }
 
     // Handle slash attack
-    targettedPlayer.health -= hpLost * (targettedCardForTurn.cardId === 'classic:laser' ? 2 : 1);
+    const opponentUsedLaser = targettedCardForTurn.cardId === 'classic:laser';
+    targettedPlayer.health -= hpLost * (opponentUsedLaser ? 2 : 1);
     return respond(
-      `<@${player.userId}> slashed <@${targettedPlayer.userId}> and lost **❤️ ${hpLost}**!`,
+      getRandomMessage(
+        this.id,
+        playerUsedPowerup && opponentUsedLaser
+          ? 'successPowerupAndLaser'
+          : opponentUsedLaser
+            ? 'successLaser'
+            : playerUsedPowerup
+              ? 'successPowerup'
+              : 'success',
+        {
+          attacker: `<@${player.userId}>`,
+          victim: `<@${targettedPlayer.userId}>`,
+          hpLost: hpLost * (opponentUsedLaser ? 2 : 1),
+        },
+      ),
     );
   },
 });
