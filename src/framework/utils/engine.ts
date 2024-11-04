@@ -134,7 +134,7 @@ export async function handleTurnLoop({
         const { status } = await sendChannelMessage(channelId, {
           embeds: [
             {
-              color: 0xeb459e,
+              color: 0xed4245,
               description: `💥 ${convertNamesArrayToText(afkPlayers.map((p) => `<@${p.userId}>`))} ${afkPlayers.length === 1 ? 'has' : 'have'} exploded for being AFK.`,
             },
           ],
@@ -149,7 +149,7 @@ export async function handleTurnLoop({
             game,
             turn,
             order: Number.NEGATIVE_INFINITY,
-            step: CardStep.Normal,
+            step: CardStep.Afk,
             skipDeathMessages: true,
           })
         )

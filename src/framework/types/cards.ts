@@ -10,9 +10,10 @@ export enum CardType {
 }
 
 export enum CardStep {
-  BeforeOrder = 0,
-  Normal = 1,
-  AfterOrder = 2,
+  Afk = 0,
+  BeforeOrder = 1,
+  Normal = 2,
+  AfterOrder = 3,
 }
 
 export interface CardExecuteContext extends CardBeforeAfterContext {
