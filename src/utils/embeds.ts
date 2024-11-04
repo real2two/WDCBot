@@ -79,13 +79,13 @@ function createSelectCardComponent(
 
 function createSelectCardComponentOptions(player: WDCGamePlayer, cardIndex: number) {
   const options: APISelectMenuOption[] = [];
-  for (const { cardId } of player.cards) {
-    const card = getCard(cardId)!;
+  for (const playerCard of player.cards) {
+    const card = getCard(playerCard.cardId)!;
     options.push({
       label:
         card.id === player.chosenCards[cardIndex]?.cardId && card.handleCustomName
-          ? card.handleCustomName({ player, card, cardIndex })
-          : card.name,
+          ? card.handleCustomName({ player, playerCard, card, cardIndex })
+          : `${card.name}${playerCard.quantity === Number.POSITIVE_INFINITY ? '' : ` (${playerCard.quantity})`}`,
       description: card.description,
       value: card.id,
       default: card.id === player.chosenCards[cardIndex]?.cardId,

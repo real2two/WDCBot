@@ -87,3 +87,18 @@ export function sendChannelMessage(channelId: string, data: RESTPostAPIChannelMe
     body: JSON.stringify(data),
   });
 }
+
+export function editMessage(
+  channelId: string,
+  messageId: string,
+  data: RESTPostAPIChannelMessageJSONBody,
+) {
+  return fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${messageId}`, {
+    method: 'patch',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bot ${env.DiscordToken}`,
+    },
+    body: JSON.stringify(data),
+  });
+}

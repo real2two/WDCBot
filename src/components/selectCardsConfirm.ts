@@ -1,7 +1,13 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { getPlayer, getWDCGame, handleTurnLoop, WDCGameState } from '../framework';
-import { createSelectCardMessage } from '../utils';
+import {
+  convertPlayersToText,
+  getPlayer,
+  getWDCGame,
+  handleTurnLoop,
+  WDCGameState,
+} from '../framework';
+import { createSelectCardMessage, editMessage } from '../utils';
 
 export default new Component({
   customId: /^select_cards:confirm$/,
@@ -74,7 +80,25 @@ export default new Component({
       );
     }
 
+    if (player.submittedChosenCards) {
+      return createSelectCardMessage(player, respond, "❌ You've already submitted.");
+    }
+
     player.submittedChosenCards = true;
+
+    if (game.lastRoundMessageId) {
+      editMessage(channelId, game.lastRoundMessageId, {
+        embeds: [
+          {
+            color: 0x57f287,
+            description: `## Round ${game.round}\n\n${convertPlayersToText(game)}`,
+            footer: {
+              text: 'Click on the button below to select your cards within 2 minutes!',
+            },
+          },
+        ],
+      });
+    }
 
     if (game.players.filter((p) => !p.diedAt).some((p) => !p.submittedChosenCards)) {
       return createSelectCardMessage(

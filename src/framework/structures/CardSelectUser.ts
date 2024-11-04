@@ -19,10 +19,10 @@ export class CardSelectUser extends Card {
   ) {
     super(data as ConstructorParameters<typeof Card>[0]);
     this.handleCustomInput = handleCustomInputCardSelectUser;
-    this.handleCustomName = ({ player, card }) => {
+    this.handleCustomName = ({ player, playerCard, card }) => {
       const data = player.chosenCards.find((c) => c?.cardId === card.id)!
         .data as CardSelectUserData;
-      return `${card.name} ${data.member?.nick || data.user?.global_name || data.user?.username || data.id}`;
+      return `${card.name} ${data.member?.nick || data.user?.global_name || data.user?.username || data.id}${playerCard.quantity === Number.POSITIVE_INFINITY ? '' : ` (${playerCard.quantity})`}`;
     };
   }
 }

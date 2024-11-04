@@ -37,6 +37,7 @@ export class Card {
     execute,
     beforeOrder,
     afterOrder,
+    handleCustomName,
     handleCustomInput,
   }: {
     id: string;
@@ -52,6 +53,7 @@ export class Card {
     execute: Card['execute'];
     beforeOrder?: Card['beforeOrder'];
     afterOrder?: Card['afterOrder'];
+    handleCustomName?: Card['handleCustomName'];
     handleCustomInput?: Card['handleCustomInput'];
   }) {
     this.id = id;
@@ -67,6 +69,7 @@ export class Card {
     this.execute = execute;
     this.beforeOrder = beforeOrder;
     this.afterOrder = afterOrder;
+    this.handleCustomName = handleCustomName;
     this.handleCustomInput = handleCustomInput;
 
     if (this.id.length > 30 || this.name.length > 100 || this.description.length > 100)

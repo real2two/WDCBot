@@ -5,6 +5,7 @@ export interface WDCGame {
   // Identification
   channelId: string;
   hostId: string;
+  lastRoundMessageId?: string;
   // Settings
   mode: 'classic';
   state: WDCGameState;

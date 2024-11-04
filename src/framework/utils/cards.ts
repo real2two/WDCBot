@@ -28,7 +28,7 @@ export function convertPlayersToText(
     })
     .map((p) =>
       p.health > 0
-        ? `- <@${p.userId}> ❤️ ${p.health}` +
+        ? `- ${game.lastRoundMessageId ? `${p.submittedChosenCards ? '✅' : '❌'} ` : ''}<@${p.userId}> ❤️ ${p.health}` +
           `${
             game.publicInventory
               ? ` ${p.cards
@@ -46,7 +46,7 @@ export function convertPlayersToText(
             opt?.order === p.diedAt?.order &&
             opt?.step === p.diedAt?.step
           ? `- <@${p.userId}> ❤️‍🔥 ${p.health}`
-          : `- <@${p.userId}> 💀`,
+          : `- <@${p.userId}> ☠️`,
     )
     .join('\n');
 }

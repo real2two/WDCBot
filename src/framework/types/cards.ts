@@ -44,6 +44,7 @@ export type CardHandleCustomInputContext = Omit<InteractionRequestData, 'env'> &
 
 export interface CardHandleCustomNameContext {
   player: WDCGamePlayer;
+  playerCard: WDCGamePlayerCard;
   card: Card;
   cardIndex: number;
 }

@@ -28,7 +28,7 @@ export async function handleRoundLoop({
   }
 
   // Create response
-  const { status } = await sendChannelMessage(channelId, {
+  const res = await sendChannelMessage(channelId, {
     embeds: [
       {
         color: 0x57f287,
@@ -55,7 +55,15 @@ export async function handleRoundLoop({
       },
     ],
   });
-  if (status !== 200) return deleteWDCGame(channelId);
+  if (res.status !== 200) return deleteWDCGame(channelId);
+
+  try {
+    const { id } = await res.json();
+    game.lastRoundMessageId = id;
+  } catch (err) {
+    console.error(err);
+    return deleteWDCGame(channelId);
+  }
 
   // Set warning timers
   game.loopTimers.push(
@@ -95,6 +103,9 @@ export async function handleTurnLoop({
   for (const timer of game.loopTimers ?? []) {
     clearTimeout(timer);
   }
+
+  // Clear round message
+  game.lastRoundMessageId = undefined;
 
   for (let turn = 1; turn <= 4; turn++) {
     // Handle turn message here
