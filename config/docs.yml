@@ -1,0 +1,105 @@
+'classic:alternator':
+  alreadyDead:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  alreadyDeadPowerup:
+  - 
+  usedOffensiveCard:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  usedOffensiveCardPowerup:
+  - 
+  usedDefensiveCard:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  usedDefensiveCardPowerup:
+  - 
+  noEffect:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  noEffectPowerup:
+  - 
+
+'classic:blindshot':
+  initial:
+  - "{{attacker}} {{estimatedHpLost}}"
+  initialPowerup:
+  - 
+  hasShield:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  hasShieldPowerup:
+  - 
+  hasReflect:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  hasReflectPowerup:
+  - 
+  success:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  successSelf:
+  - 
+  successPowerup:
+  - 
+  successPowerupSelf:
+  - 
+  successLaser:
+  - 
+  successPowerupAndLaser:
+  - 
+
+'classic:heal':
+  maxedOut:
+  - "{{attacker}}"
+  success:
+  - "{{attacker}} {{hpGained}}"
+
+'classic:laser':
+  initial:
+  - "{{attacker}} {{estimatedHpLost}}"
+  initialPowerup:
+  - 
+  hasShield:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  hasShieldPowerup:
+  - 
+  hasReflect:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  hasReflectPowerup:
+  - 
+  success:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  successPowerup:
+  - 
+  successLaser:
+  - 
+  successPowerupAndLaser:
+  - 
+
+'classic:powerup':
+  success:
+  - "{{attacker}}"
+
+'classic:reflect':
+  success:
+  - "{{attacker}}"
+
+'classic:shield':
+  success:
+  - "{{attacker}}"
+
+'classic:slash':
+  alreadyDead:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  alreadyDeadPowerup:
+  - 
+  hasShield:
+  - "{{attacker}} {{victim}} {{estimatedHpLost}}"
+  hasShieldPowerup:
+  - 
+  hasReflect:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  hasReflectPowerup:
+  - 
+  success:
+  - "{{attacker}} {{victim}} {{hpLost}}"
+  successPowerup:
+  - 
+  successLaser:
+  - 
+  successPowerupAndLaser:
+  - 
