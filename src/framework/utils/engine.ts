@@ -394,8 +394,6 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
         body: JSON.stringify({ cash: distributedPrize }),
       },
     );
-
-    console.log(await res.text(), res.status);
     if (res.status !== 200) failedToGive.push(winner);
   }
 

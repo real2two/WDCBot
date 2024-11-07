@@ -40,6 +40,9 @@ app.post('/game/duelify', async (c) => {
   if (typeof channelId !== 'string' || !validSnowflake(channelId)) {
     return c.json({ message: 'invalid_channel_id' }, 400);
   }
+  if (typeof unbelievaboatAuthorization !== 'string') {
+    return c.json({ message: 'invalid_uba' }, 400);
+  }
   if (typeof guildId !== 'string' || !validSnowflake(guildId)) {
     return c.json({ message: 'invalid_guild_id' }, 400);
   }
