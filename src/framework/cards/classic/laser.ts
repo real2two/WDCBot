@@ -1,6 +1,6 @@
 import { Card } from '../../structures';
 import { CardType } from '../../types';
-import { getRandomMessage, waitRandom } from '../../utils';
+import { getRandomMessage, wait } from '../../utils';
 
 export default new Card({
   id: 'classic:laser',
@@ -27,7 +27,7 @@ export default new Card({
     const playersToHit = game.players.filter((p) => !p.diedAt && p.userId !== player.userId);
 
     for (const targettedPlayer of playersToHit) {
-      await waitRandom(2000, 5000);
+      await wait(1000);
 
       const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
 
