@@ -26,7 +26,7 @@ export async function handleRoundLoop({ game }: { game: WDCGame }) {
     embeds: [
       {
         color: 0x57f287,
-        description: `## Round ${game.round}\n\n${convertPlayersToText(game)}`,
+        description: `## Round ${game.round}\n\n${convertPlayersToText(game, { showEmojis: true })}`,
         footer: {
           text: 'Click on the button below to select your cards within 2 minutes!',
         },

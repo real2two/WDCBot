@@ -7,7 +7,7 @@ export function getCard(cardId: string) {
 
 export function convertPlayersToText(
   game: WDCGame,
-  opt?: { round: number; turn: number; order: number; step: number },
+  opt?: { showEmojis?: boolean; round?: number; turn?: number; order?: number; step?: number },
 ) {
   const isEveryoneDead = !game.players.some((p) => p.health > 0);
   return game.players
@@ -28,7 +28,7 @@ export function convertPlayersToText(
     })
     .map((p) =>
       p.health > 0
-        ? `- ${game.lastRoundMessageId ? `${p.submittedChosenCards ? '✅' : '❌'} ` : ''}<@${p.userId}> ❤️ ${p.health}` +
+        ? `- ${opt?.showEmojis ? `${p.submittedChosenCards ? '✅' : '❌'} ` : ''}<@${p.userId}> ❤️ ${p.health}` +
           `${
             game.publicInventory
               ? ` ${p.cards

@@ -91,7 +91,7 @@ export default new Component({
         embeds: [
           {
             color: 0x57f287,
-            description: `## Round ${game.round}\n\n${convertPlayersToText(game)}`,
+            description: `## Round ${game.round}\n\n${convertPlayersToText(game, { showEmojis: true })}`,
             footer: {
               text: 'Click on the button below to select your cards within 2 minutes!',
             },
@@ -109,6 +109,6 @@ export default new Component({
     }
 
     createSelectCardMessage(player, respond, '✅ Submitted!');
-    return handleTurnLoop({ channelId, game });
+    return handleTurnLoop({ game });
   },
 });
