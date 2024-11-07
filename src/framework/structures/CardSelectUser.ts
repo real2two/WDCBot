@@ -6,6 +6,7 @@ import type {
   CardSelectUserData,
   WDCGameChosenCard,
 } from '../types';
+import { createSelectCardMessage } from '../../utils';
 
 export class CardSelectUser extends Card {
   constructor(
@@ -28,10 +29,28 @@ export class CardSelectUser extends Card {
 }
 
 export function handleCustomInputCardSelectUser({
+  game,
+  player,
   respond,
   card,
   cardIndex,
 }: CardHandleCustomInputContext) {
+  const playersLeftBesidesSelf = game.players.filter(
+    (p) => !p.diedAt && p.userId !== player.userId,
+  );
+  if (playersLeftBesidesSelf.length === 1) {
+    const opponent = playersLeftBesidesSelf[0];
+    player.chosenCards[cardIndex] = {
+      cardId: card.id,
+      data: {
+        id: opponent.userId,
+        user: opponent.cached.user,
+        member: opponent.cached.member,
+      },
+    };
+    return createSelectCardMessage(player, respond);
+  }
+
   return respond({
     type: InteractionResponseType.UpdateMessage,
     data: {

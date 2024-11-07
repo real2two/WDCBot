@@ -47,6 +47,10 @@ export default new Component({
       game.players.push({
         // Join game
         userId: user.id,
+        cached: {
+          user: interaction.user,
+          member: interaction.member,
+        },
         health: 0,
         cards: [],
         submittedChosenCards: false,

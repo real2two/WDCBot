@@ -141,6 +141,7 @@ export default new Component({
         interaction,
         respond,
         game,
+        player,
         card,
         playerCard,
         cardIndex,

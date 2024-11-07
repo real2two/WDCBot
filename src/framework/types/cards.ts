@@ -39,6 +39,7 @@ export interface CardGameContext {
 export type CardHandleCustomInputContext = Omit<InteractionRequestData, 'env'> &
   CardGameContext & {
     card: Card;
+    player: WDCGamePlayer;
     playerCard: WDCGamePlayerCard;
     cardIndex: number;
   };

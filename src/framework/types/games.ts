@@ -1,3 +1,4 @@
+import { APIGuildMember, APIUser } from 'discord-api-types/v10';
 import type { Card } from '../structures';
 import type { CardStep } from './cards';
 
@@ -40,6 +41,10 @@ export enum WDCGameState {
 
 export interface WDCGamePlayer {
   userId: string;
+  cached: {
+    user?: APIUser;
+    member?: APIGuildMember;
+  };
   health: number;
   diedAt?: {
     round: number;
