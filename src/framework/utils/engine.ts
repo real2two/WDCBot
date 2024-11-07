@@ -368,6 +368,8 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
   if (game.metadata?.type !== 'duelify') throw new Error("Metadata must be 'duelify'");
   if (!winners.length) throw new Error('Must be winners');
 
+  if (game.metadata.disableRewards) return;
+
   const prize = 0;
   const distributedPrize = Math.floor(prize / winners.length);
 
@@ -377,9 +379,8 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
       `https://unbelievaboat.com/api/v1/guilds/${encodeURIComponent(game.metadata.guildId)}/users/${encodeURIComponent(winner)}`,
       {
         method: 'patch',
-        body: JSON.stringify({
-          cash: distributedPrize,
-        }),
+        headers: { authorization: game.metadata.unbelievaboatAuthorization },
+        body: JSON.stringify({ cash: distributedPrize }),
       },
     );
     if (res.status !== 200) {
