@@ -54,7 +54,7 @@ export default new Subcommand({
     game.players.push({
       userId: user.id,
       cached: {
-        user: interaction.user,
+        user: interaction.member?.user || interaction.user,
         member: interaction.member,
       },
       health: 0,

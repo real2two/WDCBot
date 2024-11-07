@@ -48,7 +48,7 @@ export default new Component({
         // Join game
         userId: user.id,
         cached: {
-          user: interaction.user,
+          user: interaction.member?.user || interaction.user,
           member: interaction.member,
         },
         health: 0,
