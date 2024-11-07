@@ -370,7 +370,14 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
 
   if (game.metadata.disableRewards) return;
 
-  const prize = 0;
+  const totalRoundsToMultiply = 5;
+  const min = 800 / totalRoundsToMultiply;
+  const max = 1300 / totalRoundsToMultiply;
+
+  const prize =
+    game.players.length *
+    (game.round > totalRoundsToMultiply ? totalRoundsToMultiply : game.round) *
+    Math.floor(Math.random() * (max - min + 1) + min);
   const distributedPrize = Math.floor(prize / winners.length);
 
   const failedToGive = [];
