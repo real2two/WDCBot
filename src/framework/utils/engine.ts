@@ -108,7 +108,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
     if (status !== 200) return deleteWDCGame(game.channelId);
 
     // Handle kicking AFK users (turn 1 only)
-    await waitRandom(2000, 5000);
+    await waitRandom(1000, 3500);
     if (turn === 1) {
       const afkPlayers = game.players.filter((p) => !p.submittedChosenCards && !p.diedAt);
       if (afkPlayers.length) {
@@ -130,7 +130,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         if (status !== 200) return deleteWDCGame(game.channelId);
 
         // Check for win/tie condition after AFK kills
-        await waitRandom(2000, 5000);
+        await waitRandom(1000, 3500);
         if (
           await handleTurnStatusCheck({
             game,
@@ -195,7 +195,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         await card.beforeOrder?.({ ...partialContext, suborder: 0, step: CardStep.BeforeOrder });
         if (failedToRespond) return;
 
-        await waitRandom(2000, 5000);
+        await waitRandom(1000, 3500);
       }
 
       if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.BeforeOrder })) return;
@@ -227,7 +227,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
             game.usedCardsWithBeforeAfterFunctions.add(card);
           }
 
-          await waitRandom(2000, 5000);
+          await waitRandom(1000, 3500);
         }
       }
 
@@ -238,7 +238,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         await card.afterOrder?.({ ...partialContext, suborder: 0, step: CardStep.AfterOrder });
         if (failedToRespond) return;
 
-        await waitRandom(2000, 5000);
+        await waitRandom(1000, 3500);
       }
 
       if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.AfterOrder })) return;
@@ -307,7 +307,7 @@ async function handleTurnStatusCheck({
       }
     }
 
-    await waitRandom(2000, 5000);
+    await waitRandom(1000, 3500);
 
     // Return false if the game didn't end
     return false;
