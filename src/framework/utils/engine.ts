@@ -372,8 +372,8 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
   if (game.metadata.disableRewards) return;
 
   const totalRoundsToMultiply = 5;
-  const min = 25;
-  const max = 50;
+  const min = 150;
+  const max = 300;
 
   const prize =
     game.players.length *
@@ -395,6 +395,7 @@ async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners
       },
     );
 
+    console.log(await res.text(), res.status);
     if (res.status !== 200) failedToGive.push(winner);
   }
 
