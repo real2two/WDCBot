@@ -24,7 +24,9 @@ export default new Card({
       }),
     );
 
-    for (const targettedPlayer of game.players.filter((p) => !p.diedAt)) {
+    for (const targettedPlayer of game.players.filter(
+      (p) => !p.diedAt && p.userId !== player.userId,
+    )) {
       await waitRandom(2000, 5000);
 
       const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
