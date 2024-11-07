@@ -4,7 +4,7 @@ import components from './components';
 import { Hono } from 'hono';
 import { handleHonoRequest } from '@httpi/adapter-hono';
 import { createEvents } from '@httpi/client';
-import { createWDCGame, deleteWDCGame, startGame, WDCGameState } from '../framework';
+import { createWDCGame, deleteWDCGame, getWDCGame, startGame, WDCGameState } from '../framework';
 import { createPrepEmbeds, sendChannelMessage, validSnowflake } from '../utils';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 
@@ -45,6 +45,10 @@ app.post('/game/duelify', async (c) => {
   }
   if (typeof disableRewards !== 'boolean') {
     return c.json({ message: 'invalid_disable_rewards' }, 400);
+  }
+
+  if (getWDCGame(channelId)) {
+    return c.json({ message: 'ongoing_game' }, 403);
   }
 
   const game = createWDCGame({
