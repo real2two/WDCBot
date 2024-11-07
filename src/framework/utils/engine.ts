@@ -355,6 +355,53 @@ async function handleTurnStatusCheck({
   // Delete the game
   deleteWDCGame(game.channelId);
 
+  // Handle end game metadata
+  if (game.metadata?.type === 'duelify') {
+    handleMetadataDuelify({ game, winners: winners.map((w) => w.userId) });
+  }
+
   // Return true if the game ends
   return true;
+}
+
+async function handleMetadataDuelify({ game, winners }: { game: WDCGame; winners: string[] }) {
+  if (game.metadata?.type !== 'duelify') throw new Error("Metadata must be 'duelify'");
+  if (!winners.length) throw new Error('Must be winners');
+
+  const prize = 0;
+  const distributedPrize = Math.floor(prize / winners.length);
+
+  const failedToGive = [];
+  for (const winner of winners) {
+    const res = await fetch(
+      `https://unbelievaboat.com/api/v1/guilds/${encodeURIComponent(game.metadata.guildId)}/users/${encodeURIComponent(winner)}`,
+      {
+        method: 'patch',
+        body: JSON.stringify({
+          cash: distributedPrize,
+        }),
+      },
+    );
+    if (res.status !== 200) {
+      failedToGive.push(winner);
+    }
+  }
+
+  const embeds = [];
+
+  if (winners.length !== failedToGive.length) {
+    embeds.push({
+      color: 0x4fab1e,
+      description: `${convertNamesArrayToText(winners.map((w) => `<@${w}>`))} ${winners.length === 1 ? 'has' : 'have'} been rewarded **<:Sdscoin:997072540616896552> ${distributedPrize}**!`,
+    });
+  }
+
+  if (failedToGive.length) {
+    embeds.push({
+      color: 0xed4245,
+      description: `An unexpected error has occured when trying to give ${convertNamesArrayToText(winners.map((w) => `<@${w}>`))} **<:Sdscoin:997072540616896552> ${distributedPrize}**.`,
+    });
+  }
+
+  await sendChannelMessage(game.channelId, { embeds });
 }

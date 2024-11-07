@@ -6,6 +6,8 @@ export interface WDCGame {
   channelId: string;
   hostId: string | null;
   lastRoundMessageId?: string;
+  // Internal data
+  metadata?: WDCMetadata;
   // Settings
   mode: 'classic';
   state: WDCGameState;
@@ -20,6 +22,14 @@ export interface WDCGame {
   loopTimers: Timer[];
   usedCardsWithBeforeAfterFunctions: Set<Card>;
   kv: Map<string, boolean | number | string | object>;
+}
+
+export type WDCMetadata = WDCMetadataDuelify;
+export interface WDCMetadataDuelify {
+  type: 'duelify';
+  unbelievaboatAuthorization: string;
+  guildId: string;
+  disableRewards: boolean;
 }
 
 export enum WDCGameState {

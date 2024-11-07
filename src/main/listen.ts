@@ -25,14 +25,26 @@ app.post(
     }),
 );
 
-app.post('/game', async (c) => {
+app.post('/game/duelify', async (c) => {
   if (env.SecretAuthorization !== c.req.header('Authorization')) {
     return c.json({ message: 'unauthorized' }, 401);
   }
 
-  const { channel_id: channelId } = await c.req.json();
+  const {
+    channel_id: channelId,
+    uba: unbelievaboatAuthorization,
+    guild_id: guildId,
+    disable_rewards: disableRewards,
+  } = await c.req.json();
+
   if (typeof channelId !== 'string' || !validSnowflake(channelId)) {
     return c.json({ message: 'invalid_channel_id' }, 400);
+  }
+  if (typeof guildId !== 'string' || !validSnowflake(guildId)) {
+    return c.json({ message: 'invalid_guild_id' }, 400);
+  }
+  if (typeof disableRewards !== 'boolean') {
+    return c.json({ message: 'invalid_disable_rewards' }, 400);
   }
 
   const game = createWDCGame({
@@ -40,6 +52,12 @@ app.post('/game', async (c) => {
     hostId: null,
     mode: 'classic',
     state: WDCGameState.Prep,
+    metadata: {
+      type: 'duelify',
+      unbelievaboatAuthorization,
+      guildId,
+      disableRewards,
+    },
     publicInventory: true,
     defaultHealth: 7,
     maxHealth: 10,
