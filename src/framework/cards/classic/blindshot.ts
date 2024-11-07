@@ -29,7 +29,7 @@ export default new Card({
     );
 
     // Timeout to add intensity
-    await waitRandom(5000, 8000);
+    await waitRandom(2000, 5000);
 
     // Check if targetted player has shield/reflect up
     const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
