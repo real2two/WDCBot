@@ -29,7 +29,9 @@ export default new Component({
       return respond({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
-          content: `❌ Only the host (<@${game.hostId}>)${interaction.guild_id ? ' or anyone with the **Manage Server** permission' : ''} can disband the game!`,
+          content: game.hostId
+            ? `❌ Only the host (<@${game.hostId}>) or anyone with the **Manage Server** permission can disband the game!`
+            : '❌ Only anyone with the **Manage Server** permission can disband the game!',
           allowed_mentions: {},
           flags: MessageFlags.Ephemeral,
         },

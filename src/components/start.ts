@@ -1,6 +1,6 @@
 import { Component } from '@httpi/client';
 import { InteractionResponseType, MessageFlags } from 'discord-api-types/v10';
-import { getCard, getWDCGame, handleRoundLoop, WDCGameState } from '../framework';
+import { startGame, getWDCGame, WDCGameState } from '../framework';
 
 export default new Component({
   customId: /^start$/,
@@ -33,7 +33,9 @@ export default new Component({
       return respond({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
-          content: `❌ Only the host (<@${game.hostId}>) can start the game!`,
+          content: game.hostId
+            ? `❌ Only the host (<@${game.hostId}>) can start the game!`
+            : '❌ This game will automatically start within 1 minute!',
           flags: MessageFlags.Ephemeral,
         },
       });
@@ -49,38 +51,7 @@ export default new Component({
       });
     }
 
-    // Set the game's state as loading
-    game.state = WDCGameState.Loading;
-
-    // Setup the game (classic gamemode)
-    const classicCards = [
-      'classic:slash',
-      'classic:shield',
-      'classic:heal',
-      'classic:laser',
-      'classic:reflect',
-      'classic:powerup',
-      'classic:blindshot',
-      'classic:alternator',
-    ];
-    for (const player of game.players) {
-      player.health = game.defaultHealth;
-
-      player.cards = [];
-      for (const cardId of classicCards) {
-        const card = getCard(cardId)!;
-        player.cards.push({
-          cardId: card.id,
-          quantity: card.quantity,
-        });
-      }
-    }
-
-    // Start the game
-    game.state = WDCGameState.Started;
-
-    // Start game
-    handleRoundLoop({ channelId, game });
+    startGame(game);
 
     // Defer interaction
     return respond({

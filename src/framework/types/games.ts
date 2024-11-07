@@ -4,7 +4,7 @@ import type { CardStep } from './cards';
 export interface WDCGame {
   // Identification
   channelId: string;
-  hostId: string;
+  hostId: string | null;
   lastRoundMessageId?: string;
   // Settings
   mode: 'classic';

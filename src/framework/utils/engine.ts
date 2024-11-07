@@ -6,13 +6,7 @@ import { convertNamesArrayToText, sortGroupByOrder } from './utils';
 import { CardStep, type WDCGame } from '../types';
 import { wait, waitRandom } from './timers';
 
-export async function handleRoundLoop({
-  channelId,
-  game,
-}: {
-  channelId: string;
-  game: WDCGame;
-}) {
+export async function handleRoundLoop({ game }: { game: WDCGame }) {
   // Update the game's round (+1)
   game.round++;
 
@@ -28,7 +22,7 @@ export async function handleRoundLoop({
   }
 
   // Create response
-  const res = await sendChannelMessage(channelId, {
+  const res = await sendChannelMessage(game.channelId, {
     embeds: [
       {
         color: 0x57f287,
@@ -55,46 +49,40 @@ export async function handleRoundLoop({
       },
     ],
   });
-  if (res.status !== 200) return deleteWDCGame(channelId);
+  if (res.status !== 200) return deleteWDCGame(game.channelId);
 
   try {
     const { id } = await res.json();
     game.lastRoundMessageId = id;
   } catch (err) {
     console.error(err);
-    return deleteWDCGame(channelId);
+    return deleteWDCGame(game.channelId);
   }
 
   // Set warning timers
   game.loopTimers.push(
     setTimeout(async () => {
-      const { status } = await sendChannelMessage(channelId, {
+      const { status } = await sendChannelMessage(game.channelId, {
         content: '🕚 You have **10 more seconds left** to select your cards!',
       });
-      if (status !== 200) return deleteWDCGame(channelId);
+      if (status !== 200) return deleteWDCGame(game.channelId);
     }, 110000),
   );
 
   game.loopTimers.push(
     setTimeout(async () => {
-      const { status } = await sendChannelMessage(channelId, {
+      const { status } = await sendChannelMessage(game.channelId, {
         content: '‼️ You have **5 more seconds left** to select your cards!',
       });
-      if (status !== 200) return deleteWDCGame(channelId);
+      if (status !== 200) return deleteWDCGame(game.channelId);
     }, 115000),
   );
 
   // Set handleTurnLoop timer if someone doesn't choose all their cards in time
-  game.loopTimers.push(setTimeout(() => handleTurnLoop({ channelId, game }), 120000));
+  game.loopTimers.push(setTimeout(() => handleTurnLoop({ game }), 120000));
 }
 
-export async function handleTurnLoop({
-  channelId,
-  game,
-}: {
-  channelId: string;
-  game: WDCGame;
-}) {
+export async function handleTurnLoop({ game }: { game: WDCGame }) {
   // Check if you're currently handling turns (prevents race-condition)
   if (game.currentlyHandlingTurns) return;
   game.currentlyHandlingTurns = true;
@@ -109,7 +97,7 @@ export async function handleTurnLoop({
 
   for (let turn = 1; turn <= 4; turn++) {
     // Handle turn message here
-    const { status } = await sendChannelMessage(channelId, {
+    const { status } = await sendChannelMessage(game.channelId, {
       embeds: [
         {
           color: 0xfee75c,
@@ -117,7 +105,7 @@ export async function handleTurnLoop({
         },
       ],
     });
-    if (status !== 200) return deleteWDCGame(channelId);
+    if (status !== 200) return deleteWDCGame(game.channelId);
 
     // Handle kicking AFK users (turn 1 only)
     await waitRandom(2000, 5000);
@@ -131,7 +119,7 @@ export async function handleTurnLoop({
           player.chosenCards = [null, null, null, null];
         }
         // Send AFK kill message
-        const { status } = await sendChannelMessage(channelId, {
+        const { status } = await sendChannelMessage(game.channelId, {
           embeds: [
             {
               color: 0xed4245,
@@ -139,13 +127,12 @@ export async function handleTurnLoop({
             },
           ],
         });
-        if (status !== 200) return deleteWDCGame(channelId);
+        if (status !== 200) return deleteWDCGame(game.channelId);
 
         // Check for win/tie condition after AFK kills
         await waitRandom(1000, 2000);
         if (
           await handleTurnStatusCheck({
-            channelId,
             game,
             turn,
             order: Number.NEGATIVE_INFINITY,
@@ -182,7 +169,7 @@ export async function handleTurnLoop({
         respond: async (message: string | APIEmbed[]) => {
           if (failedToRespond) return null;
 
-          const res = await sendChannelMessage(channelId, {
+          const res = await sendChannelMessage(game.channelId, {
             embeds:
               typeof message === 'string'
                 ? [
@@ -196,7 +183,7 @@ export async function handleTurnLoop({
 
           if (res.status !== 200) {
             failedToRespond = true;
-            deleteWDCGame(channelId);
+            deleteWDCGame(game.channelId);
           }
 
           return res;
@@ -211,8 +198,7 @@ export async function handleTurnLoop({
         await waitRandom(2000, 5000);
       }
 
-      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.BeforeOrder }))
-        return;
+      if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.BeforeOrder })) return;
 
       for (const [suborder, chosenCardsForSuborder] of chosenCardSortedBySuborderForOrder) {
         // Handle suborder
@@ -245,8 +231,7 @@ export async function handleTurnLoop({
         }
       }
 
-      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.Normal }))
-        return;
+      if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.Normal })) return;
 
       // Handle afterOrder here
       for (const card of game.usedCardsWithBeforeAfterFunctions) {
@@ -256,26 +241,23 @@ export async function handleTurnLoop({
         await waitRandom(2000, 5000);
       }
 
-      if (await handleTurnStatusCheck({ channelId, game, turn, order, step: CardStep.AfterOrder }))
-        return;
+      if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.AfterOrder })) return;
     }
 
     await wait(10000);
   }
 
   // Start next round
-  return handleRoundLoop({ channelId, game });
+  return handleRoundLoop({ game });
 }
 
 async function handleTurnStatusCheck({
-  channelId,
   game,
   turn,
   order,
   step,
   skipDeathMessages,
 }: {
-  channelId: string;
   game: WDCGame;
   turn: number;
   order: number;
@@ -309,7 +291,7 @@ async function handleTurnStatusCheck({
         .sort((a, b) => b.health - a.health);
 
       if (playersWhoDiedThisRound.length) {
-        const { status } = await sendChannelMessage(channelId, {
+        const { status } = await sendChannelMessage(game.channelId, {
           embeds: [
             {
               color: 0xed4245,
@@ -319,7 +301,7 @@ async function handleTurnStatusCheck({
         });
 
         if (status !== 200) {
-          deleteWDCGame(channelId);
+          deleteWDCGame(game.channelId);
           return true;
         }
       }
@@ -348,7 +330,7 @@ async function handleTurnStatusCheck({
 
   if (winners.length === 1) {
     // Send winner message (1 winner)
-    sendChannelMessage(channelId, {
+    sendChannelMessage(game.channelId, {
       embeds: [
         endOfTurnEmbed,
         {
@@ -359,7 +341,7 @@ async function handleTurnStatusCheck({
     });
   } else {
     // Send tied message
-    sendChannelMessage(channelId, {
+    sendChannelMessage(game.channelId, {
       embeds: [
         endOfTurnEmbed,
         {
@@ -371,7 +353,7 @@ async function handleTurnStatusCheck({
   }
 
   // Delete the game
-  deleteWDCGame(channelId);
+  deleteWDCGame(game.channelId);
 
   // Return true if the game ends
   return true;

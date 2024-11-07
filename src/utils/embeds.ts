@@ -15,13 +15,18 @@ export function createPrepEmbeds(game: WDCGame) {
     {
       color: 0x5c2de9,
       author: {
-        name: `Preparation ➡ ${game.mode[0].toUpperCase() + game.mode.slice(1)}`,
+        name: 'Weirdly Deadly Cards - Preparation', //  ➡ ${game.mode[0].toUpperCase() + game.mode.slice(1)}
       },
       description:
-        `**Host**: <@${game.hostId}>\n` +
+        `${game.hostId ? `**Host**: <@${game.hostId}>\n` : ''}` +
         `**Players (${game.players.length})**: ${
           game.players.length ? `<@${game.players.map((p) => p.userId).join('>, <@')}>` : 'None'
         }`,
+      footer: !game.hostId
+        ? {
+            text: '🕛 You have 1 minute to join!',
+          }
+        : undefined,
     },
   ];
 }
