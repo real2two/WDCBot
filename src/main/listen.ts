@@ -26,7 +26,7 @@ app.post(
 );
 
 app.post('/game/duelify', async (c) => {
-  if (env.SecretAuthorization !== c.req.header('Authorization')) {
+  if (env.DuelifyAuthorization !== c.req.header('Authorization')) {
     return c.json({ message: 'unauthorized' }, 401);
   }
 
