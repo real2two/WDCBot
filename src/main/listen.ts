@@ -95,6 +95,7 @@ app.post('/game/duelify', async (c) => {
   game.loopTimers.push(
     setTimeout(() => {
       if (game.players.length < 2) {
+        deleteWDCGame(channelId);
         return sendChannelMessage(channelId, {
           content: '❌ Game has been cancelled because not enough people joined the game!',
         });
