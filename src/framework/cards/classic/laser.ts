@@ -24,9 +24,9 @@ export default new Card({
       }),
     );
 
-    for (const targettedPlayer of game.players.filter(
-      (p) => !p.diedAt && p.userId !== player.userId,
-    )) {
+    const playersToHit = game.players.filter((p) => !p.diedAt && p.userId !== player.userId);
+
+    for (const targettedPlayer of playersToHit) {
       await waitRandom(5000, 8000);
 
       const targettedCardForTurn = targettedPlayer.chosenCards[turn - 1]!;
@@ -58,7 +58,10 @@ export default new Card({
 
       // Handle laser attack
       const opponentUsedLaser = targettedCardForTurn.cardId === 'classic:laser';
-      targettedPlayer.health -= hpLost * (opponentUsedLaser ? 2 : 1);
+      targettedPlayer.health -=
+        hpLost * (opponentUsedLaser ? 2 : 1) * (playersToHit.length <= 1 ? 2 : 1);
+
+      // Send message
       respond(
         getRandomMessage(
           this.id,

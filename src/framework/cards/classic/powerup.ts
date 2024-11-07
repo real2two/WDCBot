@@ -11,7 +11,7 @@ export default new Card({
   emoji: '⚡',
   order: 0,
   suborder: -2,
-  quantity: 1,
+  quantity: 2,
 
   execute({ player, playerCard, respond }) {
     playerCard.quantity--;
