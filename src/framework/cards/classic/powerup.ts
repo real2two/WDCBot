@@ -12,6 +12,7 @@ export default new Card({
   order: 0,
   suborder: -2,
   quantity: 2,
+  turnCooldown: 1,
 
   execute({ player, playerCard, respond }) {
     playerCard.quantity--;
