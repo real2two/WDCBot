@@ -1,8 +1,10 @@
 'classic:alternator':
   alreadyDead:
   - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect."
+  - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect. How much do you hate them that it gets to this point bro! They're already dead!"
   alreadyDeadPowerup:
   - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect."
+- "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect. Bro its not like you can revive them from that."
   usedOffensiveCard:
   - "{{attacker}} used alternator on {{victim}} but {{victim}} used an offensive card! {{attacker}} lost **❤️ {{hpLost}}**."
   usedOffensiveCardPowerup:
@@ -21,22 +23,32 @@
   - "{{attacker}} used blindshot and it hit..."
   initialPowerup:
   - "{{attacker}} used blindshot and it hit..."
+  - "{{attacker}} used a SUPER DUPER STRONG blindshot and it hit..."
   hasShield:
   - "{{victim}} was blindshotted and the attack was blocked by a shield!"
+  - "{{victim}} was blindshotted and the attack was blocked by a shield! Imagine getting blocked LOL!"
   hasShieldPowerup:
   - "{{victim}} was blindshotted and the attack was blocked by a shield!"
+  - "{{victim}} was blindshotted and the attack was blocked by a shield! Imagine wasting your power up lmao."
   hasReflect:
   - "{{victim}} was blindshotted and but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**! L + ratio i would never get reflected"
   hasReflectPowerup:
   - "{{victim}} was blindshotted and but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**! You know, I actually thought you were going to hit that one, why do you always make me disappointed"
   success:
   - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**! GGEZ NOOB"
   successSelf:
   - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**! Just how bro how, a kid has better aim than you with a gun."
   successPowerup:
   - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**! You suck {{victim}} LOL!"
   successPowerupSelf:
   - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**!"
+  - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**! My god bro, I hate you, you suck"
+  - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**! You'll get them next time, I hope."
   successLaser:
   - "{{victim}} was blindshotted and lost **❤️ {{hpLost}}**!"
   successPowerupAndLaser:
@@ -77,6 +89,7 @@
 'classic:reflect':
   success:
   - "{{attacker}} activated a reflect!"
+  - "{{attacker}} activated a reflect! Will it successfully work?!"
 
 'classic:shield':
   success:
@@ -85,16 +98,22 @@
 'classic:slash':
   alreadyDead:
   - "{{attacker}} slashed {{victim}}'s dead body."
+  - "{{attacker}} slashed {{victim}}'s dead body. You like attacking dead people? Weirdo."
   alreadyDeadPowerup:
   - "{{attacker}} slashed {{victim}}'s dead body."
+  - "{{attacker}} slashed {{victim}}'s dead body. Bro even used a power up, you REALLY hate them huh?"
   hasShield:
   - "{{attacker}} slashed {{victim}} but the attack was blocked by a shield!"
+  - "{{attacker}} slashed {{victim}} but the attack was blocked by a shield! Get predicted."
   hasShieldPowerup:
   - "{{attacker}} slashed {{victim}} but the attack was blocked by a shield!"
+  - "{{attacker}} slashed {{victim}} but the attack was blocked by a shield! Man, I feel bad for you."
   hasReflect:
   - "{{attacker}} slashed {{victim}} but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**!"
+  - "{{attacker}} slashed {{victim}} but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**! too ez bro get gud"
   hasReflectPowerup:
   - "{{attacker}} slashed {{victim}} but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**!"
+  - "{{attacker}} slashed {{victim}} but the attack was reflected, making {{attacker}} lose **❤️ {{hpLost}}**! Bro how are you this bad go practice or something"
   success:
   - "{{attacker}} slashed {{victim}} and lost **❤️ {{hpLost}}**!"
   successPowerup:
