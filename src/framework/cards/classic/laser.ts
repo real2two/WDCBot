@@ -58,8 +58,8 @@ export default new Card({
 
       // Handle laser attack
       const opponentUsedLaser = targettedCardForTurn.cardId === 'classic:laser';
-      targettedPlayer.health -=
-        hpLost * (opponentUsedLaser ? 2 : 1) * (playersToHit.length <= 1 ? 2 : 1);
+      const totalHpLost = hpLost * (opponentUsedLaser ? 2 : 1) * (playersToHit.length <= 1 ? 2 : 1);
+      targettedPlayer.health -= totalHpLost;
 
       // Send message
       respond(
@@ -75,7 +75,7 @@ export default new Card({
           {
             attacker: `<@${player.userId}>`,
             victim: `<@${targettedPlayer.userId}>`,
-            hpLost: hpLost * (opponentUsedLaser ? 2 : 1),
+            hpLost: totalHpLost,
           },
         ),
       );
