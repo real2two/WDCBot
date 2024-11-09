@@ -38,6 +38,7 @@ export default new Subcommand({
     const game: WDCGame = {
       channelId,
       hostId: user.id,
+      disbanded: false,
       mode: 'classic',
       state: WDCGameState.Prep,
       publicInventory: true,

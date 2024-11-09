@@ -15,6 +15,8 @@ export function createWDCGame(game: WDCGame) {
 
 export function deleteWDCGame(channelId: string) {
   const game = games.get(channelId);
+
+  if (game) game.disbanded = true;
   for (const timer of game?.loopTimers ?? []) {
     clearTimeout(timer);
   }

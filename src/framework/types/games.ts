@@ -1,4 +1,4 @@
-import { APIGuildMember, APIUser } from 'discord-api-types/v10';
+import type { APIGuildMember, APIUser } from 'discord-api-types/v10';
 import type { Card } from '../structures';
 import type { CardStep } from './cards';
 
@@ -8,6 +8,7 @@ export interface WDCGame {
   hostId: string | null;
   lastRoundMessageId?: string;
   // Internal data
+  disbanded: boolean;
   metadata?: WDCMetadata;
   // Settings
   mode: 'classic';

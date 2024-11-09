@@ -57,6 +57,7 @@ app.post('/game/duelify', async (c) => {
   const game = createWDCGame({
     channelId,
     hostId: null,
+    disbanded: false,
     mode: 'classic',
     state: WDCGameState.Prep,
     metadata: {

@@ -7,6 +7,9 @@ import { CardStep, type WDCGame } from '../types';
 import { wait, waitRandom } from './timers';
 
 export async function handleRoundLoop({ game }: { game: WDCGame }) {
+  // Check if the game was disbanded
+  if (game.disbanded) return;
+
   // Update the game's round (+1)
   game.round++;
 
@@ -83,6 +86,9 @@ export async function handleRoundLoop({ game }: { game: WDCGame }) {
 }
 
 export async function handleTurnLoop({ game }: { game: WDCGame }) {
+  // Check if the game was disbanded
+  if (game.disbanded) return;
+
   // Check if you're currently handling turns (prevents race-condition)
   if (game.currentlyHandlingTurns) return;
   game.currentlyHandlingTurns = true;
@@ -109,6 +115,8 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
 
     // Handle kicking AFK users (turn 1 only)
     await waitRandom(1000, 3500);
+    if (game.disbanded) return; // Check if the game was disbanded
+
     if (turn === 1) {
       const afkPlayers = game.players.filter((p) => !p.submittedChosenCards && !p.diedAt);
       if (afkPlayers.length) {
@@ -131,6 +139,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
 
         // Check for win/tie condition after AFK kills
         await waitRandom(1000, 3500);
+
         if (
           await handleTurnStatusCheck({
             game,
@@ -167,7 +176,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         turn,
         order,
         respond: async (message: string | APIEmbed[]) => {
-          if (failedToRespond) return null;
+          if (failedToRespond || game.disbanded) return null;
 
           const res = await sendChannelMessage(game.channelId, {
             embeds:
@@ -196,6 +205,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         if (failedToRespond) return;
 
         await waitRandom(1000, 3500);
+        if (game.disbanded) return; // Check if the game was disbanded
       }
 
       if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.BeforeOrder })) return;
@@ -217,7 +227,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
             step: CardStep.Normal,
           });
 
-          if (failedToRespond) return;
+          if (failedToRespond || game.disbanded) return;
 
           // Add cards to set if they have the beforeOrder/afterOrder function(s)
           if (
@@ -228,6 +238,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
           }
 
           await waitRandom(1000, 3500);
+          if (game.disbanded) return; // Check if the game was disbanded
         }
       }
 
@@ -239,6 +250,7 @@ export async function handleTurnLoop({ game }: { game: WDCGame }) {
         if (failedToRespond) return;
 
         await waitRandom(1000, 3500);
+        if (game.disbanded) return; // Check if the game was disbanded
       }
 
       if (await handleTurnStatusCheck({ game, turn, order, step: CardStep.AfterOrder })) return;
@@ -264,6 +276,9 @@ async function handleTurnStatusCheck({
   step: CardStep;
   skipDeathMessages?: boolean;
 }): Promise<boolean> {
+  // Check if the game was disbanded
+  if (game.disbanded) return true;
+
   // Get amount of players that are still alive and declare "diedAt" if a player died.
   let alive = 0;
   for (const player of game.players) {
@@ -308,6 +323,9 @@ async function handleTurnStatusCheck({
     }
 
     await waitRandom(1000, 3500);
+
+    // Check if the game was disbanded
+    if (game.disbanded) return true;
 
     // Return false if the game didn't end
     return false;
