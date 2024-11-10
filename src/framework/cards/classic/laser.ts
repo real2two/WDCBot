@@ -9,6 +9,7 @@ export default new Card({
   description: 'Remove 1 heart from every opponent, but be twice as vulnerable to attacks.',
   order: 0,
   suborder: -1,
+  turnCooldown: 2,
 
   async execute({ game, player, turn, respond }) {
     // Check if player activated a power up
