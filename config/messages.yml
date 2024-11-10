@@ -4,7 +4,7 @@
   - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect. How much do you hate them that it gets to this point bro! They're already dead!"
   alreadyDeadPowerup:
   - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect."
-- "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect. Bro its not like you can revive them from that."
+  - "{{attacker}} used alternator over {{victim}}'s dead body. It did no effect. Bro its not like you can revive them from that."
   usedOffensiveCard:
   - "{{attacker}} used alternator on {{victim}} but {{victim}} used an offensive card! {{attacker}} lost **❤️ {{hpLost}}**."
   usedOffensiveCardPowerup:
