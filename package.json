@@ -19,7 +19,7 @@
     "@discordjs/core": "^1.2.0",
     "@types/bun": "^1.1.13",
     "@types/js-yaml": "^4.0.9",
-    "discord-api-types": "^0.37.103"
+    "discord-api-types": "^0.37.104"
   },
   "trustedDependencies": ["@biomejs/biome"]
 }

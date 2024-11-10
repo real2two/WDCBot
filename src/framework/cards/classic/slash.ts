@@ -7,7 +7,6 @@ export default new CardSelectUser({
   types: [CardType.Offensive],
   name: 'Slash',
   description: 'Remove 1 heart from an opponent.',
-  image: 'https://i.imgur.com/Pp96eh9.png',
   order: 0,
   suborder: 0,
 

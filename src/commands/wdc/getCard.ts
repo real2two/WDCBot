@@ -56,7 +56,7 @@ export default new Subcommand({
             description: `**Type${card.types.length === 1 ? '' : 's'}**: ${convertNamesArrayToText(
               card.types.map((t) => ['Offensive', 'Defensive', 'Supportive'][t]),
             )}\n**Description**: ${card.description}\n**Quantity**: ${card.quantity}\n**Turn cooldown**: ${card.turnCooldown}\n**Order**: ${card.order}`,
-            image: { url: card.image },
+            image: card.image ? { url: card.image } : undefined,
             footer: {
               text: `ID: ${card.id}`,
             },

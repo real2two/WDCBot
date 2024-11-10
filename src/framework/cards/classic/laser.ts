@@ -7,7 +7,6 @@ export default new Card({
   types: [CardType.Offensive],
   name: 'Laser',
   description: 'Remove 1 heart from every opponent, but be twice as vulnerable to attacks.',
-  image: 'https://i.imgur.com/FHQ8Qma.png',
   order: 0,
   suborder: -1,
 

@@ -4,7 +4,6 @@ import { ApplicationIntegrationType, InteractionContextType } from 'discord-api-
 import start from './wdc/start';
 import disband from './wdc/disband';
 import getCard from './wdc/getCard';
-import allCards from './wdc/allCards';
 
 export default new CommandWithSubcommands({
   data: {
@@ -20,5 +19,5 @@ export default new CommandWithSubcommands({
       InteractionContextType.PrivateChannel,
     ],
   },
-  subcommands: [start, disband, getCard, allCards],
+  subcommands: [start, disband, getCard],
 });

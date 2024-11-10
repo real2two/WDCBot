@@ -11,7 +11,7 @@ export class Card {
   types: CardType[];
   name: string;
   description: string;
-  image: string;
+  image?: string;
   emoji?: string;
   order: number;
   suborder: number;
@@ -60,7 +60,7 @@ export class Card {
     this.types = types;
     this.name = name;
     this.description = description;
-    this.image = image || 'https://upload.wikimedia.org/wikipedia/commons/e/e0/PlaceholderLC.png';
+    this.image = image;
     this.emoji = emoji;
     this.order = order || 0;
     this.suborder = suborder || 0;

@@ -7,7 +7,6 @@ export default new Card({
   types: [CardType.Defensive],
   name: 'Heal',
   description: 'Get 1 heart.',
-  image: 'https://i.imgur.com/JrcaGxj.png',
   order: 0,
   suborder: -2,
   turnCooldown: 2,

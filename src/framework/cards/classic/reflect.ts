@@ -7,7 +7,6 @@ export default new Card({
   types: [CardType.Defensive],
   name: 'Reflect',
   description: 'Reflect a move.',
-  image: 'https://i.imgur.com/qMGAGz0.png',
   emoji: '🪞',
   order: 0,
   suborder: -2,

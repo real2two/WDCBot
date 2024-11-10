@@ -1,9 +1,18 @@
 import fs from 'node:fs';
 import yaml from 'js-yaml';
 
-export const messages = yaml.load(fs.readFileSync('config/messages.yml', 'utf8')) as {
-  [key: string]: { [key: string]: string[] };
-};
+export let messages = getMessages();
+
+setInterval(() => {
+  console.log('a');
+  messages = getMessages();
+}, 60000);
+
+function getMessages() {
+  return yaml.load(fs.readFileSync('config/messages.yml', 'utf8')) as {
+    [key: string]: { [key: string]: string[] };
+  };
+}
 
 export function getRandomMessage(
   card: string,
