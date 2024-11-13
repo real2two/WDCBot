@@ -45,12 +45,13 @@ export default new Card({
 
       if (targettedCardForTurn.cardId === 'classic:reflect') {
         // Handle if opponent has a reflect
-        player.health -= hpLost * 2 * (playersToHit.length <= 1 ? 2 : 1);
+        const totalHpLost = hpLost * 2 * (playersToHit.length <= 1 ? 2 : 1);
+        player.health -= totalHpLost;
         respond(
           getRandomMessage(this.id, playerUsedPowerup ? 'hasReflectPowerup' : 'hasReflect', {
             attacker: `<@${player.userId}>`,
             victim: `<@${targettedPlayer.userId}>`,
-            hpLost: hpLost * 2,
+            hpLost: totalHpLost,
           }),
         );
         continue;
